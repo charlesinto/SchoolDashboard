@@ -1,0 +1,98 @@
+<div class="row">
+  <div class="col-xl-8">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="''"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <kt-context-menu></kt-context-menu>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <mat-table #table [dataSource]="dataSource">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              >
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Position Column -->
+
+          <!-- Name Column -->
+
+          <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef>
+              Attendance Date
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.date }}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="count">
+            <mat-header-cell *matHeaderCellDef> Total Count </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.count }} </mat-cell>
+          </ng-container>
+          <!-- Weight Column -->
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selection.toggle(row)"
+          >
+          </mat-row>
+        </mat-table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+  <div class="col-xl-4">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet>
+      <kt-portlet-header
+        [title]="'Total Count'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <kt-context-menu></kt-context-menu>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <!-- Checkbox Column -->
+        <ng-container>
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="d-flex justify-content-center align-items-center">
+                  <h1>{{ totalCount }}</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>

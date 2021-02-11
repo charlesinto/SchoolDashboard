@@ -1,0 +1,222 @@
+<div class="row">
+  <div [ngClass]="{ 'col-xl-12': !editMode, 'col-xl-8': editMode }">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet>
+      <kt-portlet-header
+        [title]="'All Students'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <kt-context-menu></kt-context-menu>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <mat-table #table [dataSource]="dataSource">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              >
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="admissionNumber">
+            <mat-header-cell *matHeaderCellDef>
+              Admission Number
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.admissionNumber }}
+            </mat-cell>
+          </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="surname">
+            <mat-header-cell *matHeaderCellDef> Surname </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.surname }}
+            </mat-cell>
+          </ng-container>
+          <!-- Weight Column -->
+          <ng-container matColumnDef="otherNames">
+            <mat-header-cell *matHeaderCellDef> Other Names </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.otherNames }}
+            </mat-cell>
+          </ng-container>
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="schoolName">
+            <mat-header-cell *matHeaderCellDef> School </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.schoolName }}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="state">
+            <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.state }}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>
+              <!-- <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              > -->
+              <!-- </mat-checkbox> -->
+              Actions
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <!-- <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox> -->
+              <button
+                mat-icon-button
+                color="primary"
+                aria-label="Example icon button with a home icon"
+                (click)="onRowElementClick($event, element)"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selection.toggle(row)"
+          >
+          </mat-row>
+        </mat-table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+  <div *ngIf="editMode" class="col-xl-4">
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <ng-container ktPortletTools>
+        <div class="container school-detail">
+          <div class="row py-4">
+            <div class="col-xl-12">
+              <div class="d-flex justify-content-end">
+                <button
+                  mat-icon-button
+                  (click)="closeDetailPage($event)"
+                  color="accent"
+                  aria-label="Example icon button with a delete icon"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="school.profile_url !== null" class="row">
+            <div class="col-xl-12">
+              <div class="image-avatar-wrapper">
+                <img
+                  class="image-avatar"
+                  alt="profile"
+                  src="{{ school.profile_url }}"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <span>Surname</span>
+              <h6>{{ school.surname }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Other Names</span>
+              <h6>{{ school.otherNames }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <span>School</span>
+              <h6>{{ school.school }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Gender</span>
+              <h6>{{ school.gender }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <span>Regsitration Number</span>
+              <h6>{{ school.registrationNumber }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Religion</span>
+              <h6>{{ school.religion }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <span>Date of Birth</span>
+              <h6>{{ school.dateOfBirth | date: "mediumDate" }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Student Class</span>
+              <h6>{{ school.studentClass }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <span>Guardina Name</span>
+              <h6>{{ school.guardianName }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Guardian Contact</span>
+              <h6>{{ school.guardianTelephone }}</h6>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-xl-12">
+              <agm-map [latitude]="lat" [longitude]="lng">
+                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+              </agm-map>
+            </div>
+          </div> -->
+        </div>
+      </ng-container>
+    </kt-portlet>
+  </div>
+  <!-- <div class="col-xl-4">
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header [title]="'Authors Profit'">
+        <ng-container ktPortletTools>
+          <kt-context-menu2></kt-context-menu2>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body>
+        <kt-widget4 [data]="widget4_4">
+          <ng-template #actionTemplate let-item="item">
+            <span class="kt-widget4__number" [ngClass]="item.valueColor">{{
+              item.value
+            }}</span>
+          </ng-template>
+        </kt-widget4>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div> -->
+</div>
