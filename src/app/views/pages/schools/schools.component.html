@@ -351,11 +351,15 @@
                   [longitude]="item.lng"
                   ><div class="container">
                     <div class="row mb-1">
-                      <h4>{{ schoolOnView?.schoolName }}</h4>
+                      <h4>
+                        <mat-icon>school</mat-icon
+                        >{{ schoolOnView?.schoolName }}
+                      </h4>
                     </div>
                     <div class="row">
                       <h5>
-                        {{ schoolOnView?.lga }}, {{ schoolOnView?.state }}
+                        <mat-icon>location_on</mat-icon>{{ schoolOnView?.lga }},
+                        {{ schoolOnView?.state }}
                       </h5>
                     </div>
                   </div></agm-info-window
