@@ -19,6 +19,7 @@ const routes: Routes = [
         (m) => m.StudentAttendanceModule
       ),
   },
+  { path: 'view-attendance-report', loadChildren: () => import('./attendance-report-detail/attendance-report-detail.module').then(m => m.AttendanceReportDetailModule) },
 ];
 
 @NgModule({

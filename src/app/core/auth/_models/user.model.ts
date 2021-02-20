@@ -21,7 +21,6 @@ export class User extends BaseModel {
   lastname?: string;
   socialNetworks?: SocialNetworks;
   state_access?: string;
-
   clear(): void {
     this.id = undefined;
     this.username = '';

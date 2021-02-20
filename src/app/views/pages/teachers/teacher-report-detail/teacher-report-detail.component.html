@@ -1,0 +1,173 @@
+<div class="row mb-2">
+  <div class="col-xl-4">
+    <kt-portlet>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <ng-container ktPortletTools>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  aria-label="Example icon button with a home icon"
+                  (click)="onBackArrowClick($event)"
+                >
+                  <mat-icon>arrow_back</mat-icon>
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+  <div class="col-xl-8">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <!-- Checkbox Column -->
+        <ng-container class="py-3">
+          <div class="container py-3">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="d-flex justify-content-center align-items-center">
+                  <!-- <kt-widget14></kt-widget14> -->
+                  <div class="kt-widget12__chart" style="height: 250px">
+                    <canvas
+                      #chart
+                      id="kt_chart_order_statistics"
+                      height="312"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-xl-12">
+                <h5 class="text-black text-center">{{ school }}</h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-xl-12">
+                <h5 *ngIf="lga && state" class="text-black text-center">
+                  {{ lga }}, {{ state }}
+                </h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-xl-12">
+                <h4>Total Present</h4>
+                <h5 class="text-success">{{ totalPresent }}</h5>
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-xl-12">
+                <h4>Total Absent</h4>
+                <h5 class="text-danger">{{ totalAbsent }}</h5>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xl-12">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="''"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <!-- <kt-context-menu></kt-context-menu> -->
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <mat-table #table [dataSource]="dataSource">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              >
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Position Column -->
+
+          <!-- Name Column -->
+
+          <ng-container matColumnDef="oracleNumber">
+            <mat-header-cell *matHeaderCellDef> Oracle Number </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.oracleNumber }}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="fullName">
+            <mat-header-cell *matHeaderCellDef>
+              Teacher Fullname
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.fullName }}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="attendanceDate">
+            <mat-header-cell *matHeaderCellDef>
+              Attendance Date
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.attendanceDate }}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef>
+              Attendance Status
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <span
+                [ngClass]="{
+                  'text-success': element.status === 'Present',
+                  'text-danger': element.status !== 'Present'
+                }"
+                aria-label="Example icon button with a home icon"
+              >
+                {{ element.status }}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Weight Column -->
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selection.toggle(row)"
+          >
+          </mat-row>
+        </mat-table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>

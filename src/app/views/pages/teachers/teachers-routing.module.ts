@@ -13,6 +13,7 @@ const routes: Routes = [
       ),
   },
   { path: 'attendance-report', loadChildren: () => import('./teacher-attendance/teacher-attendance.module').then(m => m.TeacherAttendanceModule) },
+  { path: 'view-attendance-report', loadChildren: () => import('./teacher-report-detail/teacher-report-detail.module').then(m => m.TeacherReportDetailModule) },
 ];
 
 @NgModule({

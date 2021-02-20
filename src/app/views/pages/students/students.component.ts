@@ -2,6 +2,14 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { StudentsService } from './students.service';
+import { FormControl, Validators } from '@angular/forms';
+import { School } from '../schools/schools.component';
+import {
+  IState,
+  ILocalGovernments,
+} from '../../services/app-service/app-service.service';
+import { AppServiceService } from '../../services/app-service/app-service.service';
+import { SchoolsService } from '../schools/schools.service';
 
 @Component({
   selector: 'kt-students',
@@ -27,15 +35,49 @@ export class StudentsComponent implements OnInit {
   title = 'My first AGM project';
   lat = 51.678418;
   lng = 7.809007;
+
+  loadingFilterBox = false;
+  statesSelected = new FormControl('', Validators.compose([]));
+  lgaSelected = new FormControl('', Validators.compose([]));
+  schoolSelected = new FormControl('', Validators.compose([]));
+
+  schools: School[] = [];
+
+  states: IState[] = [];
+  localgovernments: ILocalGovernments[] = [];
+
+  totalCount = 0;
+  schoolDataBase: School[] = [];
+
+  studentDataBase: Student[] = [];
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   constructor(
     private changeDetectRef: ChangeDetectorRef,
-    private studentService: StudentsService
+    private studentService: StudentsService,
+    private appService: AppServiceService,
+    private schoolService: SchoolsService
   ) {}
 
   ngOnInit() {
     this.getStudents();
+    this.getSchools();
+    this.getUserAccessibleLocals();
+    this.getUserAccessibleState();
+  }
+
+  getSchools() {
+    this.loadingFilterBox = true;
+    this.schoolService.getSchools().subscribe(
+      (data) => {
+        this.loadingFilterBox = false;
+        this.schools = data;
+        this.schoolDataBase = data;
+      },
+      (error) => {
+        this.loadingFilterBox = false;
+      }
+    );
   }
   getStudents() {
     this.loading = true;
@@ -44,6 +86,8 @@ export class StudentsComponent implements OnInit {
         this.loading = false;
         this.dataSource.data = data;
         this.ELEMENT_DATA = data;
+        this.studentDataBase = data;
+        this.totalCount = data.length;
         this.changeDetectRef.detectChanges();
       },
       (error) => {
@@ -76,6 +120,64 @@ export class StudentsComponent implements OnInit {
   closeDetailPage() {
     this.selection.clear();
     this.editMode = false;
+  }
+  onStateSelectionChange(event: any) {
+    // if (this.statesSelected.value.includes('All')) {
+    //   const index = this.statesSelected.value.findIndex(
+    //     (item) => item === 'All'
+    //   );
+    //   const values = this.statesSelected.value;
+    //   values.splice(index, 1);
+    //   // this.statesSelected.setValue([...])
+    // }
+    if (!this.statesSelected.value.includes('All')) {
+      this.getUserAccessibleLocals(this.statesSelected.value);
+      this.schools = this.schoolDataBase.filter((item) =>
+        this.statesSelected.value.includes(item.state.trim())
+      );
+    } else {
+      this.getUserAccessibleLocals();
+      this.schools = this.schoolDataBase;
+    }
+  }
+
+  getUserAccessibleState() {
+    this.states = this.appService.getStates(
+      this.appService.getUserStateAccess()
+    );
+  }
+
+  getUserAccessibleLocals(states = []) {
+    this.localgovernments = this.appService.getLocalGovernments(states);
+  }
+
+  onlgaSelectionChange(event) {
+    if (!this.lgaSelected.value.includes('All')) {
+      this.schools = this.schoolDataBase.filter((item) =>
+        this.lgaSelected.value.includes(item.lga.trim())
+      );
+    } else {
+      this.schools = this.schoolDataBase;
+    }
+  }
+  filterData() {
+    if (
+      this.lgaSelected.value.includes('All') &&
+      this.statesSelected.value.includes('All') &&
+      this.schoolSelected.value.includes('All')
+    ) {
+      this.dataSource.data = this.studentDataBase;
+      this.totalCount = this.studentDataBase.length;
+    } else if (this.schoolSelected.value.length > 0) {
+      if (!this.schoolSelected.value.includes('All')) {
+        this.dataSource.data = this.studentDataBase.filter((item) =>
+          this.schoolSelected.value.includes(item.school)
+        );
+        this.totalCount = this.dataSource.data.length;
+      }
+    }
+
+    this.changeDetectRef.detectChanges();
   }
 }
 

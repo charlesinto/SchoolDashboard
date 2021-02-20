@@ -27,6 +27,7 @@ export class SchoolsService {
           const schools: School[] = [];
           response['data'].forEach((item) => {
             schools.push({
+              id: item.id,
               address: item.address,
               district: item.district,
               principal: item.principal,

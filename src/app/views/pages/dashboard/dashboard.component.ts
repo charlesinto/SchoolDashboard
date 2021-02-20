@@ -1,7 +1,7 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
 // Lodash
-import { shuffle } from 'lodash';
+import { shuffle, StringChain } from 'lodash';
 // Services
 // Widgets model
 import {
@@ -9,6 +9,7 @@ import {
   SparklineChartOptions,
 } from '../../../core/_base/layout';
 import { Widget4Data } from '../../partials/content/widgets/widget4/widget4.component';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'kt-dashboard',
@@ -24,12 +25,15 @@ export class DashboardComponent implements OnInit {
   widget4_2: Widget4Data;
   widget4_3: Widget4Data;
   widget4_4: Widget4Data;
+  loading = false;
+  totalSchools: string = '0';
+  totalStudents: string = '0';
+  totalTeachers: string = '0';
 
-  totalSchools: Number = 0;
-  totalStudents: Number = 0;
-  totalTeachers: Number = 0;
-
-  constructor(private layoutConfigService: LayoutConfigService) {}
+  constructor(
+    private layoutConfigService: LayoutConfigService,
+    private dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
     this.chartOptions1 = {
@@ -220,5 +224,29 @@ export class DashboardComponent implements OnInit {
         valueColor: 'kt-font-brand',
       },
     ]);
+    this.getDashboardSettings();
   }
+  getDashboardSettings() {
+    this.loading = true;
+    this.dashboardService.getDashboardSettings().subscribe(
+      (data) => {
+        console.log('344o: ', data);
+        this.loading = false;
+        this.totalSchools = data.schoolCount;
+        this.totalStudents = data.studentCount;
+        this.totalTeachers = data.teacherCount;
+      },
+      (error) => {
+        console.log('344o: ', error);
+        this.loading = false;
+        console.log(error);
+      }
+    );
+  }
+}
+
+export interface IDashboardReport {
+  studentCount: string;
+  schoolCount: string;
+  teacherCount: string;
 }

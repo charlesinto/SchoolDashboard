@@ -7,22 +7,23 @@ import { CoreModule } from '../../../core/core.module';
 import { PartialsModule } from '../../partials/partials.module';
 import { DashboardComponent } from './dashboard.component';
 
+import { MatProgressBarModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 @NgModule({
-	imports: [
-		CommonModule,
-		PartialsModule,
-		CoreModule,
-		RouterModule.forChild([
-			{
-				path: '',
-				component: DashboardComponent
-			},
-		]),
-	],
-	providers: [],
-	declarations: [
-		DashboardComponent,
-	]
+  imports: [
+    CommonModule,
+    PartialsModule,
+    CoreModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: DashboardComponent,
+      },
+    ]),
+    MatProgressBarModule,
+  ],
+  providers: [],
+  declarations: [DashboardComponent],
 })
-export class DashboardModule {
-}
+export class DashboardModule {}

@@ -106,7 +106,7 @@ import { SortHeaderComponent } from './data-table/sort-header/sort-header.compon
 import { MaterialTableComponent } from './data-table/material-table/material-table.component';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 // import { SchoolsService } from './schools.service';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 import { TeachersService } from '../teachers.service';
 
 @NgModule({
@@ -116,9 +116,9 @@ import { TeachersService } from '../teachers.service';
     TeacherByQualificationRoutingModule,
     CoreModule,
     PartialsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
-    }),
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
+    // }),
     CommonModule,
     PartialsModule,
     CoreModule,

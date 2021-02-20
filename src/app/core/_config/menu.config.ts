@@ -76,7 +76,7 @@ export class MenuConfig {
                 //   page: '/ngbootstrap/accordion',
                 // },
                 {
-                  title: 'Teacher Distribution by Qualification',
+                  title: 'Teachers Qualification',
                   page: '/ngbootstrap/accordion',
                 },
               ],
@@ -166,7 +166,7 @@ export class MenuConfig {
                 //   page: '/ngbootstrap/accordion',
                 // },
                 {
-                  title: 'Student Distribution by Gender, Class and School',
+                  title: 'Distribution by Gender, Class and School',
                   page: '/students/attendance-report',
                 },
               ],
@@ -316,7 +316,7 @@ export class MenuConfig {
             //   page: '/ngbootstrap/accordion',
             // },
             {
-              title: 'Teacher Distribution by Qualification',
+              title: 'Teachers Qualification',
               page: '/teachers/teachers-by-qualification',
             },
           ],
@@ -406,7 +406,7 @@ export class MenuConfig {
             //   page: '/ngbootstrap/accordion',
             // },
             {
-              title: 'Student Distribution by Gender, Class and School',
+              title: 'Distribution by Gender, Class and School',
               page: '/students/students-by-gender',
             },
           ],

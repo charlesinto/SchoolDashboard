@@ -105,8 +105,9 @@ import { PaginatorComponent } from './data-table/paginator/paginator.component';
 import { SortHeaderComponent } from './data-table/sort-header/sort-header.component';
 import { MaterialTableComponent } from './data-table/material-table/material-table.component';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { AppServiceService } from '../../../services/app-service/app-service.service';
 // import { SchoolsService } from './schools.service';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [TeacherAttendanceComponent],
@@ -115,9 +116,9 @@ import { AgmCoreModule } from '@agm/core';
     TeacherAttendanceRoutingModule,
     CoreModule,
     PartialsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
-    }),
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
+    // }),
     CommonModule,
     PartialsModule,
     CoreModule,

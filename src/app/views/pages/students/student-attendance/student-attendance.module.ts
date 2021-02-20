@@ -16,6 +16,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
+import { AppServiceService } from '../../../services/app-service/app-service.service';
 import {
   MatAutocompleteModule,
   MatNativeDateModule,
@@ -51,6 +52,7 @@ import {
   MatBottomSheetRef,
   MAT_DATE_LOCALE,
   MAT_DATE_FORMATS,
+  MatPaginatorIntl,
 } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -60,6 +62,7 @@ import {
   MatDatepickerModule,
   MatDatepickerIntl,
 } from '@angular/material/datepicker';
+// import {MatNativeDateModule} from '@angular/material/core';
 import { FormfieldComponent } from './formcontrols/formfield/formfield.component';
 import { InputComponent } from './formcontrols/input/input.component';
 import { RadiobuttonComponent } from './formcontrols/radiobutton/radiobutton.component';
@@ -106,8 +109,18 @@ import { SortHeaderComponent } from './data-table/sort-header/sort-header.compon
 import { MaterialTableComponent } from './data-table/material-table/material-table.component';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 // import { SchoolsService } from './schools.service';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 import { StudentsService } from '../students.service';
+
+import { NgbAlertConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { ButtonsComponent } from './buttons/buttons.component';
+import { HttpClientModule } from '@angular/common/http';
+import { DropdownComponent } from './dropdown/dropdown.component';
+
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import {MatDatepickerModule} from '@angular/material/datepicker';
+import { SchoolsService } from '../../schools/schools.service';
 
 @NgModule({
   declarations: [StudentAttendanceComponent],
@@ -116,9 +129,9 @@ import { StudentsService } from '../students.service';
     StudentAttendanceRoutingModule,
     CoreModule,
     PartialsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
-    }),
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
+    // }),
     CommonModule,
     PartialsModule,
     CoreModule,
@@ -163,6 +176,8 @@ import { StudentsService } from '../students.service';
     MaterialPreviewModule,
     FormsModule,
     ReactiveFormsModule,
+    // MatPaginatorIntl,
   ],
+  providers: [AppServiceService, SchoolsService],
 })
 export class StudentAttendanceModule {}

@@ -6,7 +6,15 @@ import { catchError, map } from 'rxjs/operators';
 import { User } from '../../../core/auth/_models/user.model';
 import { Teacher } from './teachers.component';
 import { ITeacherQualificationByState } from './teacher-by-qualification/teacher-by-qualification.component';
-import { ITeacherAttendanceReport } from './teacher-attendance/teacher-attendance.component';
+import {
+  ITeacherAttendanceReport,
+  ITeacherAttendanceQueryParams,
+} from './teacher-attendance/teacher-attendance.component';
+import { IAttendanceSummary } from '../students/student-attendance/student-attendance.component';
+import {
+  ITeacherAttendaceQueryDetail,
+  ITeacherAttendanceDetail,
+} from './teacher-report-detail/teacher-report-detail.component';
 
 const BASE_URL = 'https://school-census.herokuapp.com';
 const GET_ALL_SCHOOLS = '/api/v1/teacher/get-teachers';
@@ -84,6 +92,52 @@ export class TeachersService {
           const data: ITeacherAttendanceReport[] = [];
           response['response'].forEach((item) =>
             data.push({ date: item.data, count: item.count })
+          );
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+  getAttendanceReportDetail(params: ITeacherAttendaceQueryDetail) {
+    return this.http.post(`${BASE_URL}/`, params);
+  }
+  getAttendanceReport(
+    params: ITeacherAttendanceQueryParams
+  ): Observable<IAttendanceSummary[]> {
+    return this.http
+      .post<IAttendanceSummary[]>(
+        `${BASE_URL}/api/v1/attendance/teachers/get-attendance-report`,
+        params
+      )
+      .pipe(
+        map((response) => {
+          const data: IAttendanceSummary[] = [];
+          response['data'].forEach((item) =>
+            data.push({ count: item['count'], date: item['date'] })
+          );
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+  getTeacherAttendanceReportDetail(
+    params: ITeacherAttendaceQueryDetail
+  ): Observable<ITeacherAttendanceDetail[]> {
+    return this.http
+      .post<ITeacherAttendanceDetail[]>(
+        `${BASE_URL}/api/v1/attendance/teachers/get-attendance-report-detail`,
+        params
+      )
+      .pipe(
+        map((response) => {
+          const data: ITeacherAttendanceDetail[] = [];
+          response['data'].forEach((item) =>
+            data.push({
+              attendanceDate: item['date'],
+              oracleNumber: item['oraclenumber'],
+              fullName: `${item['surname']} ${item['othernames']}`,
+              status: item['status'],
+            })
           );
           return data;
         }),

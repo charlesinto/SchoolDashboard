@@ -9,6 +9,12 @@ import {
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SchoolsService } from './schools.service';
+import { FormControl, Validators } from '@angular/forms';
+import {
+  IState,
+  ILocalGovernments,
+  AppServiceService,
+} from '../../services/app-service/app-service.service';
 
 @Component({
   selector: 'kt-schools',
@@ -51,24 +57,60 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<School>(this.ELEMENT_DATA);
   selection = new SelectionModel<Element>(true, []);
   loading: Boolean = false;
+
   editMode: Boolean = false;
   school: School;
   title = 'My first AGM project';
-  lat = 51.678418;
-  lng = 7.809007;
+  lat = 9.0765;
+  lng = 7.3986;
+  zoomLevel = 8;
+
+  locations: { id?: number; lat: string; lng: string }[] = [];
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  statesSelected = new FormControl('', Validators.compose([]));
+  lgaSelected = new FormControl('', Validators.compose([]));
+
+  states: IState[] = [];
+  localgovernments: ILocalGovernments[] = [];
+
+  totalCount = 0;
+  schoolDataBase: School[] = [];
+
+  openInfoWindows: number[] = [];
+
+  schoolOnView: School;
+
   constructor(
     private schoolService: SchoolsService,
-    private changeDetectRef: ChangeDetectorRef
+    private changeDetectRef: ChangeDetectorRef,
+    private appService: AppServiceService
   ) {}
 
   ngOnInit() {
+    this.getLocation();
+    this.getUserAccessibleState();
+    this.getUserAccessibleLocals();
     this.getSchools();
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  getUserAccessibleState() {
+    this.states = this.appService.getStates(
+      this.appService.getUserStateAccess()
+    );
+  }
+  onStateSelectionChange(event: any) {
+    if (this.statesSelected.value.includes('All')) {
+      return this.getUserAccessibleLocals();
+    }
+    this.getUserAccessibleLocals(this.statesSelected.value);
+  }
+  getUserAccessibleLocals(states = []) {
+    this.localgovernments = this.appService.getLocalGovernments(states);
   }
 
   getSchools() {
@@ -78,7 +120,19 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
         console.log(data);
         this.ELEMENT_DATA = data;
         this.dataSource.data = this.ELEMENT_DATA;
+        this.schoolDataBase = data;
         this.loading = false;
+        this.totalCount = data.length;
+        this.locations = [];
+        data.forEach((item) => {
+          if (item.schoolCoordinate) {
+            this.locations.push({
+              lat: item.schoolCoordinate.split(',')[0].trim(),
+              lng: item.schoolCoordinate.split(',')[1].trim(),
+              id: item.id,
+            });
+          }
+        });
         this.changeDetectRef.detectChanges();
       },
       (error) => {
@@ -110,6 +164,68 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     this.selection.clear();
     this.editMode = false;
   }
+  filterData() {
+    if (
+      this.lgaSelected.value.includes('All') &&
+      this.statesSelected.value.includes('All')
+    ) {
+      this.dataSource.data = this.schoolDataBase;
+    } else if (this.lgaSelected.value.length > 0) {
+      if (!this.lgaSelected.value.includes('All'))
+        this.dataSource.data = this.schoolDataBase.filter((item) =>
+          this.lgaSelected.value.includes(item.lga)
+        );
+    } else if (this.statesSelected.value.length > 0) {
+      if (!this.statesSelected.value.includes('All'))
+        this.dataSource.data = this.schoolDataBase.filter((item) =>
+          this.statesSelected.value.includes(item.state)
+        );
+    }
+    this.totalCount = this.dataSource.data.length;
+    this.locations = [];
+    this.dataSource.data.forEach((item) => {
+      if (item.schoolCoordinate) {
+        this.locations.push({
+          lat: item.schoolCoordinate.split(',')[0].trim(),
+          lng: item.schoolCoordinate.split(',')[1].trim(),
+          id: item.id,
+        });
+      }
+    });
+    this.changeDetectRef.detectChanges();
+  }
+  markerClicked(event, item: { id?: number; lat: string; lng: string }) {
+    console.log(event, item);
+    this.openInfoWindows = [];
+    const index = this.schoolDataBase.findIndex(
+      (school) => school.id === item.id
+    );
+    this.schoolOnView = this.schoolDataBase[index];
+    this.openInfoWindows.push(item.id);
+  }
+  getLocation(): void {
+    console.log('cal');
+    if (navigator.geolocation) {
+      console.log('cal 56');
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('kkjj', position);
+          const longitude = position.coords.longitude;
+          const latitude = position.coords.latitude;
+          this.lng = longitude;
+          this.lat = latitude;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      console.log('No support for geolocation');
+    }
+  }
+  isInfoWindowOpen(id) {
+    return this.openInfoWindows.includes(id);
+  }
 }
 
 export interface Element {
@@ -121,6 +237,7 @@ export interface Element {
 }
 
 export interface School {
+  id?: number;
   address: string;
   district: string;
   principal: string;

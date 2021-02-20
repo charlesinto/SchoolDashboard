@@ -1,3 +1,179 @@
+<div class="row mb-2">
+  <div class="col-xl-8">
+    <mat-progress-bar
+      *ngIf="loadingFilterBox"
+      mode="indeterminate"
+    ></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="'Filter Report'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <!-- <kt-context-menu></kt-context-menu> -->
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <ng-container ktPortletTools>
+          <div class="container">
+            <form (ngSubmit)="filterData()" class="pb-4">
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="State"
+                      [formControl]="statesSelected"
+                      multiple
+                      (selectionChange)="onStateSelectionChange($event)"
+                    >
+                      <mat-select-trigger>
+                        {{
+                          statesSelected.value ? statesSelected.value[0] : ""
+                        }}
+                        <span
+                          *ngIf="statesSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ statesSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option [value]="'All'">All</mat-option>
+                      <mat-option
+                        *ngFor="let topping of states"
+                        [value]="topping.name"
+                        >{{ topping.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Local Government Area"
+                      [formControl]="lgaSelected"
+                      multiple
+                      (selectionChange)="onlgaSelectionChange($event)"
+                    >
+                      <mat-select-trigger>
+                        {{ lgaSelected.value ? lgaSelected.value[0] : "" }}
+                        <span
+                          *ngIf="lgaSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ lgaSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option
+                        *ngFor="let topping of localgovernments"
+                        [value]="topping.name"
+                        >{{ topping.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="School"
+                      [formControl]="schoolSelected"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        {{
+                          schoolSelected.value ? schoolSelected.value[0] : ""
+                        }}
+                        <span
+                          *ngIf="schoolSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ schoolSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option
+                        *ngFor="let topping of schools"
+                        [value]="topping.schoolName"
+                        >{{ topping.schoolName }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Class"
+                      [formControl]="classSelected"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        {{ classSelected.value ? classSelected.value[0] : "" }}
+                        <span
+                          *ngIf="classSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ classSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option
+                        *ngFor="let class of classes"
+                        [value]="class"
+                        >{{ class }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input
+                      [formControl]="dateRange"
+                      matInput
+                      type="text"
+                      name="daterange"
+                      value=""
+                    />
+                    <!-- <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker" />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker> -->
+                    <!-- <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                      <input matStartDate placeholder="Start date" />
+                      <input matEndDate placeholder="End date" />
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker"
+                    ></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker> -->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    aria-label="Example icon button with a home icon"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                    Filter
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>
 <div class="row">
   <div class="col-xl-8">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
@@ -35,25 +211,9 @@
           </ng-container>
 
           <!-- Position Column -->
-          <ng-container matColumnDef="school">
-            <mat-header-cell *matHeaderCellDef> School </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.school }}
-            </mat-cell>
-          </ng-container>
+
           <!-- Name Column -->
-          <ng-container matColumnDef="studentClass">
-            <mat-header-cell *matHeaderCellDef> Student Class </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.studentClass }}
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="gender">
-            <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.gender }}
-            </mat-cell>
-          </ng-container>
+
           <ng-container matColumnDef="date">
             <mat-header-cell *matHeaderCellDef>
               Attendance Date
@@ -65,6 +225,33 @@
           <ng-container matColumnDef="count">
             <mat-header-cell *matHeaderCellDef> Total Count </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{ element.count }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>
+              <!-- <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              > -->
+              <!-- </mat-checkbox> -->
+              Actions
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <!-- <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox> -->
+              <button
+                mat-icon-button
+                color="primary"
+                aria-label="Example icon button with a home icon"
+                (click)="onRowElementClick($event, element)"
+              >
+                <mat-icon>remove_red_eye</mat-icon>
+              </button>
+            </mat-cell>
           </ng-container>
           <!-- Weight Column -->
 

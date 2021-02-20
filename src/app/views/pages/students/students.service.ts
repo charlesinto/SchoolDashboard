@@ -1,12 +1,25 @@
 import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpClient,
+  HttpHeaders,
+} from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { User } from '../../../core/auth/_models/user.model';
 import { environment } from 'environments/environment';
 import { Student } from './students.component';
 import { IStudentGenderReport } from './students-by-gender/students-by-gender.component';
-import { IStudentAttendanceReport } from './student-attendance/student-attendance.component';
+import {
+  IStudentAttendanceReport,
+  IQueryAttendanceParams,
+  IAttendanceSummary,
+} from './student-attendance/student-attendance.component';
+import {
+  IQueryAttendanceDetail,
+  IStudentAttendaceQuickView,
+  IStudentAttendanceDetail,
+} from './attendance-report-detail/attendance-report-detail.component';
 
 const BASE_URL = 'https://school-census.herokuapp.com';
 const GET_ALL_STUDENTS = '/api/v1/student/get-students';
@@ -117,6 +130,52 @@ export class StudentsService {
               gender: item.gender,
               studentClass: item.studentclass,
               count: item.count,
+            });
+          });
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+
+  getAttendanceReportByFilteredParams(
+    params: IQueryAttendanceParams
+  ): Observable<IAttendanceSummary[]> {
+    return this.http
+      .post(`${BASE_URL}/api/v1/attendance/filter-report`, params)
+      .pipe(
+        map((response) => {
+          const data: IAttendanceSummary[] = [];
+          response['data'].forEach((item) =>
+            data.push({ date: item['date'], count: item['count'] })
+          );
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+
+  getAttendanceDetail(
+    params: IQueryAttendanceDetail
+  ): Observable<IStudentAttendanceDetail[]> {
+    return this.http
+      .post<IStudentAttendanceDetail[]>(
+        `${BASE_URL}/api/v1/attendance/get-attendance-report-detail`,
+        params
+      )
+      .pipe(
+        map((response) => {
+          const dt: IStudentAttendaceQuickView[] = response['data'];
+          const data: IStudentAttendanceDetail[] = [];
+          dt.forEach((item) => {
+            data.push({
+              fullName: `${item.othernames} ${item.surname}`,
+              female: item.gender.toLowerCase() === 'female',
+              male: item.gender.toLowerCase() === 'male',
+              school: item.school,
+              status: item.status,
+              class: item.studentclass,
+              attendanceDate: params.attendanceDate,
             });
           });
           return data;

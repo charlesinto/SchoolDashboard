@@ -73,6 +73,8 @@ import * as scss from 'highlight.js/lib/languages/scss';
 import * as xml from 'highlight.js/lib/languages/xml';
 import * as json from 'highlight.js/lib/languages/json';
 
+import { AppServiceService } from './views/services/app-service/app-service.service';
+
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelSpeed: 0.5,
@@ -130,6 +132,7 @@ export function hljsLanguages(): HighlightLanguage[] {
   providers: [
     AuthService,
     LayoutConfigService,
+    AppServiceService,
     LayoutRefService,
     MenuConfigService,
     PageConfigService,

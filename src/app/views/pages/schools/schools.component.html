@@ -1,3 +1,133 @@
+<div class="row mb-2">
+  <div class="col-xl-8">
+    <mat-progress-bar
+      *ngIf="loadingFilterBox"
+      mode="indeterminate"
+    ></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="'Filter Report'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <!-- <kt-context-menu></kt-context-menu> -->
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <ng-container ktPortletTools>
+          <div class="container">
+            <form (ngSubmit)="filterData()" class="pb-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="State"
+                      [formControl]="statesSelected"
+                      (selectionChange)="onStateSelectionChange($event)"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        {{
+                          statesSelected.value ? statesSelected.value[0] : ""
+                        }}
+                        <span
+                          *ngIf="statesSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ statesSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+
+                      <mat-option [value]="'All'">All</mat-option>
+                      <mat-option
+                        *ngFor="let topping of states"
+                        [value]="topping.name"
+                        >{{ topping.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Local Government Area"
+                      [formControl]="lgaSelected"
+                      (selectionChange)="onlgaSelectionChange($event)"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        {{ lgaSelected.value ? lgaSelected.value[0] : "" }}
+                        <span
+                          *ngIf="lgaSelected.value?.length > 1"
+                          class="example-additional-selection"
+                        >
+                          (+{{ lgaSelected.value.length - 1 }} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option [value]="'All'">All</mat-option>
+                      <mat-option
+                        *ngFor="let topping of localgovernments"
+                        [value]="topping.name"
+                        >{{ topping.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="px-3">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      aria-label="Example icon button with a home icon"
+                    >
+                      <mat-icon>filter_list</mat-icon>
+                      Filter
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row"></div>
+            </form>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+  <div class="col-xl-4">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet>
+      <kt-portlet-header
+        [title]="'Total Number of Schools'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <kt-context-menu></kt-context-menu>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <!-- Checkbox Column -->
+        <ng-container>
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="d-flex justify-content-center align-items-center">
+                  <h1>{{ totalCount }}</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>
+
 <div class="row">
   <div [ngClass]="{ 'col-xl-12': !editMode, 'col-xl-8': editMode }">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
@@ -159,13 +289,13 @@
               <h6>{{ school.address }}</h6>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-xl-12">
               <agm-map [latitude]="lat" [longitude]="lng">
                 <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
               </agm-map>
             </div>
-          </div>
+          </div> -->
         </div>
       </ng-container>
     </kt-portlet>
@@ -188,4 +318,53 @@
       </kt-portlet-body>
     </kt-portlet>
   </div> -->
+</div>
+
+<div class="row">
+  <div class="col-xl-12">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="'Schools Location on Map'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <!-- <kt-context-menu></kt-context-menu> -->
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <ng-container>
+          <div class="map-wrapper">
+            <agm-map class="h-100" [latitude]="lat" [longitude]="lng">
+              <agm-marker
+                *ngFor="let item of locations"
+                [latitude]="item.lat"
+                [longitude]="item.lng"
+                [markerClickable]="true"
+                (markerClick)="markerClicked($event, item)"
+              >
+                <agm-info-window
+                  [isOpen]="isInfoWindowOpen(item.id)"
+                  [latitude]="item.lat"
+                  [longitude]="item.lng"
+                  ><div class="container">
+                    <div class="row mb-1">
+                      <h4>{{ schoolOnView?.schoolName }}</h4>
+                    </div>
+                    <div class="row">
+                      <h5>
+                        {{ schoolOnView?.lga }}, {{ schoolOnView?.state }}
+                      </h5>
+                    </div>
+                  </div></agm-info-window
+                >
+              </agm-marker>
+            </agm-map>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
 </div>

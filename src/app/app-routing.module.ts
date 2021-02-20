@@ -27,7 +27,15 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'ngbootstrap',
+        loadChildren: () =>
+          import('app/views/pages/ngbootstrap/ngbootstrap.module').then(
+            (m) => m.NgbootstrapModule
+          ),
+      },
+      {
         path: 'dashboard',
+        pathMatch: 'full',
         loadChildren: () =>
           import('app/views/pages/dashboard/dashboard.module').then(
             (m) => m.DashboardModule
@@ -47,20 +55,14 @@ const routes: Routes = [
       //       (m) => m.ECommerceModule
       //     ),
       // },
-      // {
-      //   path: 'ngbootstrap',
-      //   loadChildren: () =>
-      //     import('app/views/pages/ngbootstrap/ngbootstrap.module').then(
-      //       (m) => m.NgbootstrapModule
-      //     ),
-      // },
-      // {
-      //   path: 'material',
-      //   loadChildren: () =>
-      //     import('app/views/pages/material/material.module').then(
-      //       (m) => m.MaterialModule
-      //     ),
-      // },
+
+      {
+        path: 'material',
+        loadChildren: () =>
+          import('app/views/pages/material/material.module').then(
+            (m) => m.MaterialModule
+          ),
+      },
       // {
       //   path: 'user-management',
       //   loadChildren: () =>

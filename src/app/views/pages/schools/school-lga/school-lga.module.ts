@@ -106,7 +106,7 @@ import { SortHeaderComponent } from './data-table/sort-header/sort-header.compon
 import { MaterialTableComponent } from './data-table/material-table/material-table.component';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 // import { SchoolsService } from './schools.service';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [SchoolLgaComponent],
