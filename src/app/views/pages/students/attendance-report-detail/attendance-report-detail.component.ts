@@ -5,6 +5,7 @@ import {
   Input,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Location } from '@angular/common';
 import {
@@ -16,16 +17,18 @@ import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { StudentsService } from '../students.service';
 import { LayoutConfigService } from 'app/core/_base/layout';
+// import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'kt-attendance-report-detail',
   templateUrl: './attendance-report-detail.component.html',
   styleUrls: ['./attendance-report-detail.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  // providers: [NgbDropdownConfig],
 })
 export class AttendanceReportDetailComponent implements OnInit {
   ELEMENT_DATA: IStudentAttendanceDetail[] = [];
   displayedColumns = [
-    'school',
     'class',
     'fullName',
     'male',
@@ -47,13 +50,21 @@ export class AttendanceReportDetailComponent implements OnInit {
   totalFemaleAbsent = 0;
   totalMaleAbsent = 0;
   color = Chart.helpers.color;
+  school: string;
+  lga: string = '';
+  state: string = '';
+  totalAbsent: number;
+  totalPresent: number;
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private studentService: StudentsService,
     private changeDetectRef: ChangeDetectorRef,
     private layoutConfigService: LayoutConfigService
-  ) {}
+  ) // config: NgbDropdownConfig
+  {
+    // config.autoClose = true;
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -70,6 +81,9 @@ export class AttendanceReportDetailComponent implements OnInit {
           : '',
         attendanceDate: params['attendanceDate'],
       };
+      this.school = attendanceQueryParams.schools[0];
+      this.state = attendanceQueryParams.state[0];
+      this.lga = attendanceQueryParams.lga[0];
       this.getAttendanceDetails(attendanceQueryParams);
     });
   }
@@ -106,6 +120,8 @@ export class AttendanceReportDetailComponent implements OnInit {
             }
           }
         });
+        this.totalPresent = this.totalMalePresent + this.totalFemalePresent;
+        this.totalAbsent = this.totalFemaleAbsent + this.totalMaleAbsent;
         this.data = {
           labels: ['Male', 'Female'],
           datasets: [

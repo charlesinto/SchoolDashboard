@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ElementRef,
+  Input,
 } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,6 +20,7 @@ import { SchoolsService } from '../../schools/schools.service';
 // import { School } from '../../schools/schools.component';
 import { School } from '../../schools/schools.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LayoutConfigService } from 'app/core/_base/layout';
 
 const $ = window['$'];
 
@@ -77,6 +79,10 @@ export class StudentAttendanceComponent implements OnInit {
   queryParams: IQueryAttendanceParams;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @Input() data: { labels: string[]; datasets: any[] };
+  @Input() type: string = 'line';
+  @ViewChild('chart', { static: true }) chart: ElementRef;
+  color = Chart.helpers.color;
 
   constructor(
     private studentService: StudentsService,
@@ -84,7 +90,8 @@ export class StudentAttendanceComponent implements OnInit {
     private appService: AppServiceService,
     private schoolService: SchoolsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private layoutConfigService: LayoutConfigService
   ) {}
 
   ngOnInit() {
@@ -102,12 +109,95 @@ export class StudentAttendanceComponent implements OnInit {
           : '',
       };
       this.queryParams = attendanceParams;
+      this.schoolSelected.setValue(attendanceParams.schools[0]);
+      this.statesSelected.setValue(attendanceParams.state[0]);
+      this.lgaSelected.setValue(attendanceParams.lga[0]);
+      this.classSelected.setValue(attendanceParams.class);
+      this.dateRange.setValue(
+        `${attendanceParams.startDate} to ${attendanceParams.endDate}`
+      );
       this.getAttendanceReport(attendanceParams);
     });
     this.initialDatePicker();
     this.getUserAccessibleState();
     this.getUserAccessibleLocals();
     this.getSchools();
+    if (!this.data) {
+      this.data = {
+        labels: ['1 Jan', '2 Jan', '3 Jan', '4 Jan', '5 Jan', '6 Jan', '7 Jan'],
+        datasets: [
+          {
+            fill: true,
+            // borderWidth: 0,
+            backgroundColor: this.color(
+              this.layoutConfigService.getConfig('colors.state.brand')
+            )
+              .alpha(0.6)
+              .rgbString(),
+            borderColor: this.color(
+              this.layoutConfigService.getConfig('colors.state.brand')
+            )
+              .alpha(0)
+              .rgbString(),
+
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 12,
+            pointBackgroundColor: Chart.helpers
+              .color('#000000')
+              .alpha(0)
+              .rgbString(),
+            pointBorderColor: Chart.helpers
+              .color('#000000')
+              .alpha(0)
+              .rgbString(),
+            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
+              'colors.state.brand'
+            ),
+            pointHoverBorderColor: Chart.helpers
+              .color('#000000')
+              .alpha(0.1)
+              .rgbString(),
+
+            data: [20, 40, 50, 25, 35, 60, 30],
+          },
+          {
+            fill: true,
+            // borderWidth: 0,
+            backgroundColor: this.color(
+              this.layoutConfigService.getConfig('colors.state.brand')
+            )
+              .alpha(0.2)
+              .rgbString(),
+            borderColor: this.color(
+              this.layoutConfigService.getConfig('colors.state.brand')
+            )
+              .alpha(0)
+              .rgbString(),
+
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 12,
+            pointBackgroundColor: Chart.helpers
+              .color('#000000')
+              .alpha(0)
+              .rgbString(),
+            pointBorderColor: Chart.helpers
+              .color('#000000')
+              .alpha(0)
+              .rgbString(),
+            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
+              'colors.state.brand'
+            ),
+            pointHoverBorderColor: Chart.helpers
+              .color('#000000')
+              .alpha(0.1)
+              .rgbString(),
+
+            data: [25, 45, 55, 30, 40, 65, 35],
+          },
+        ],
+      };
+    }
+    this.initChart();
   }
 
   getAttendanceReport(params: IQueryAttendanceParams) {
@@ -192,9 +282,9 @@ export class StudentAttendanceComponent implements OnInit {
     //   // this.statesSelected.setValue([...])
     // }
     if (this.statesSelected.value.length > 0) {
-      this.getUserAccessibleLocals(this.statesSelected.value);
-      this.schools = this.schoolsDataBase.filter((item) =>
-        this.statesSelected.value.includes(item.state.trim())
+      this.getUserAccessibleLocals([this.statesSelected.value]);
+      this.schools = this.schoolsDataBase.filter(
+        (item) => this.statesSelected.value === item.state.trim()
       );
     } else {
       this.getUserAccessibleLocals();
@@ -218,8 +308,8 @@ export class StudentAttendanceComponent implements OnInit {
 
   onlgaSelectionChange(event) {
     if (this.lgaSelected.value.length > 0) {
-      this.schools = this.schoolsDataBase.filter((item) =>
-        this.lgaSelected.value.includes(item.lga.trim())
+      this.schools = this.schoolsDataBase.filter(
+        (item) => this.lgaSelected.value === item.lga.trim()
       );
     } else {
       this.schools = this.schoolsDataBase;
@@ -261,13 +351,117 @@ export class StudentAttendanceComponent implements OnInit {
           ? this.classSelected.value.join('**')
           : '',
         schools: this.schoolSelected.value
-          ? this.schoolSelected.value.join('**')
+          ? [this.schoolSelected.value].join('**')
           : '',
         states: this.statesSelected.value
-          ? this.statesSelected.value.join('**')
+          ? [this.statesSelected.value].join('**')
           : '',
-        lga: this.lgaSelected.value ? this.lgaSelected.value.join('**') : '',
+        lga: this.lgaSelected.value ? [this.lgaSelected.value].join('**') : '',
         dateRange: this.dateRange.value ? this.dateRange.value : '',
+      },
+    });
+  }
+  private initChart() {
+    // For more information about the chartjs, visit this link
+    // https://www.chartjs.org/docs/latest/getting-started/usage.html
+
+    const chart = new Chart(this.chart.nativeElement, {
+      type: this.type,
+      data: this.data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        // legend: false,
+        scales: {
+          xAxes: [
+            {
+              categoryPercentage: 0.35,
+              barPercentage: 0.7,
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: 'Month',
+              },
+              gridLines: false,
+              ticks: {
+                display: true,
+                beginAtZero: true,
+                fontColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.3'
+                ),
+                fontSize: 13,
+                padding: 10,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              categoryPercentage: 0.35,
+              barPercentage: 0.7,
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: 'Value',
+              },
+              gridLines: {
+                color: this.layoutConfigService.getConfig(
+                  'colors.base.shape.2'
+                ),
+                drawBorder: false,
+                offsetGridLines: false,
+                drawTicks: false,
+                borderDash: [3, 4],
+                zeroLineWidth: 1,
+                zeroLineColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.2'
+                ),
+                zeroLineBorderDash: [3, 4],
+              },
+              ticks: {
+                max: 70,
+                stepSize: 10,
+                display: true,
+                beginAtZero: true,
+                fontColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.3'
+                ),
+                fontSize: 13,
+                padding: 10,
+              },
+            },
+          ],
+        },
+        title: {
+          display: false,
+        },
+        hover: {
+          mode: 'index',
+        },
+        tooltips: {
+          enabled: true,
+          intersect: false,
+          mode: 'nearest',
+          bodySpacing: 5,
+          yPadding: 10,
+          xPadding: 10,
+          caretPadding: 0,
+          displayColors: false,
+          backgroundColor: this.layoutConfigService.getConfig(
+            'colors.state.brand'
+          ),
+          titleFontColor: '#ffffff',
+          cornerRadius: 4,
+          footerSpacing: 0,
+          titleSpacing: 0,
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 5,
+            bottom: 5,
+          },
+        },
       },
     });
   }
