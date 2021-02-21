@@ -26,13 +26,13 @@ const routes: Routes = [
             (m) => m.SchoolsModule
           ),
       },
-      {
-        path: 'ngbootstrap',
-        loadChildren: () =>
-          import('app/views/pages/ngbootstrap/ngbootstrap.module').then(
-            (m) => m.NgbootstrapModule
-          ),
-      },
+      // {
+      //   path: 'ngbootstrap',
+      //   loadChildren: () =>
+      //     import('app/views/pages/ngbootstrap/ngbootstrap.module').then(
+      //       (m) => m.NgbootstrapModule
+      //     ),
+      // },
       {
         path: 'dashboard',
         pathMatch: 'full',
@@ -56,13 +56,13 @@ const routes: Routes = [
       //     ),
       // },
 
-      {
-        path: 'material',
-        loadChildren: () =>
-          import('app/views/pages/material/material.module').then(
-            (m) => m.MaterialModule
-          ),
-      },
+      // {
+      //   path: 'material',
+      //   loadChildren: () =>
+      //     import('app/views/pages/material/material.module').then(
+      //       (m) => m.MaterialModule
+      //     ),
+      // },
       // {
       //   path: 'user-management',
       //   loadChildren: () =>
