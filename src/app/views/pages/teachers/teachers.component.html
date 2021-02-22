@@ -169,101 +169,124 @@
         </ng-container>
       </kt-portlet-header>
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
-        <mat-table #table [dataSource]="dataSource">
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-              >
-              </mat-checkbox>
-            </mat-cell>
-          </ng-container>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="px-3">
+              <mat-form-field>
+                <mat-label>Filter</mat-label>
+                <input
+                  matInput
+                  (keyup)="applyFilter($event)"
+                  placeholder="Searching for..."
+                  #input
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-table #table [dataSource]="dataSource">
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  >
+                  </mat-checkbox>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox>
+                </mat-cell>
+              </ng-container>
 
-          <!-- Position Column -->
-          <ng-container matColumnDef="registrationNumber">
-            <mat-header-cell *matHeaderCellDef>
-              Registration Number
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.registrationNumber }}
-            </mat-cell>
-          </ng-container>
-          <!-- Name Column -->
-          <ng-container matColumnDef="surname">
-            <mat-header-cell *matHeaderCellDef> Surname </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.surname }}
-            </mat-cell>
-          </ng-container>
-          <!-- Weight Column -->
-          <ng-container matColumnDef="otherNames">
-            <mat-header-cell *matHeaderCellDef> Other Names </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.otherNames }}
-            </mat-cell>
-          </ng-container>
-          <!-- Symbol Column -->
-          <ng-container matColumnDef="schoolName">
-            <mat-header-cell *matHeaderCellDef> School </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.schoolName }}
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="state">
-            <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.state }}
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef>
-              <!-- <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              > -->
-              <!-- </mat-checkbox> -->
-              Actions
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <!-- <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
+              <!-- Position Column -->
+              <ng-container matColumnDef="registrationNumber">
+                <mat-header-cell *matHeaderCellDef>
+                  Registration Number
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.registrationNumber }}
+                </mat-cell>
+              </ng-container>
+              <!-- Name Column -->
+              <ng-container matColumnDef="surname">
+                <mat-header-cell *matHeaderCellDef> Surname </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.surname }}
+                </mat-cell>
+              </ng-container>
+              <!-- Weight Column -->
+              <ng-container matColumnDef="otherNames">
+                <mat-header-cell *matHeaderCellDef>
+                  Other Names
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.otherNames }}
+                </mat-cell>
+              </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="schoolName">
+                <mat-header-cell *matHeaderCellDef> School </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.schoolName }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="state">
+                <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.state }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  > -->
+                  <!-- </mat-checkbox> -->
+                  Actions
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <!-- <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox> -->
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    aria-label="Example icon button with a home icon"
+                    (click)="onRowElementClick($event, element)"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                (click)="selection.toggle(row)"
               >
-              </mat-checkbox> -->
-              <button
-                mat-icon-button
-                color="primary"
-                aria-label="Example icon button with a home icon"
-                (click)="onRowElementClick($event, element)"
-              >
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </mat-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            (click)="selection.toggle(row)"
-          >
-          </mat-row>
-        </mat-table>
-        <mat-paginator
-          [pageSizeOptions]="[5, 10, 20]"
-          showFirstLastButtons
-        ></mat-paginator>
+              </mat-row>
+            </mat-table>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </div>
       </kt-portlet-body>
     </kt-portlet>
   </div>

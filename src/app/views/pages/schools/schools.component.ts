@@ -158,6 +158,12 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     console.log(element);
     this.selection.clear();
     this.school = element;
+    this.lat = element.schoolCoordinate
+      ? parseInt(element.schoolCoordinate.split(',')[0])
+      : null;
+    this.lng = element.schoolCoordinate
+      ? parseInt(element.schoolCoordinate.split(',')[1])
+      : null;
     this.editMode = true;
   }
   closeDetailPage() {
@@ -202,6 +208,10 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     );
     this.schoolOnView = this.schoolDataBase[index];
     this.openInfoWindows.push(item.id);
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   getLocation(): void {
     console.log('cal');

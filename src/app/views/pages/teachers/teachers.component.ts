@@ -146,6 +146,11 @@ export class TeachersComponent implements OnInit {
     );
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   getUserAccessibleLocals(states = []) {
     this.localgovernments = this.appService.getLocalGovernments(states);
   }
