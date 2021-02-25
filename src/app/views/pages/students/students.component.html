@@ -128,7 +128,7 @@
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <kt-portlet>
       <kt-portlet-header
-        [title]="'Total Number of Teachers'"
+        [title]="'Total Number of Students'"
         [class]="
           'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
         "
@@ -208,12 +208,12 @@
               </ng-container>
 
               <!-- Position Column -->
-              <ng-container matColumnDef="admissionNumber">
+              <ng-container matColumnDef="registrationNumber">
                 <mat-header-cell *matHeaderCellDef>
-                  Admission Number
+                  Regsitration Number
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  {{ element.admissionNumber }}
+                  {{ element.registrationNumber }}
                 </mat-cell>
               </ng-container>
               <!-- Name Column -->
@@ -239,10 +239,10 @@
                   {{ element.school }}
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="state">
-                <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
+              <ng-container matColumnDef="gender">
+                <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  {{ element.state }}
+                  {{ element.gender }}
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="actions">
@@ -345,8 +345,8 @@
               <h6>{{ school.registrationNumber }}</h6>
             </div>
             <div class="col-xl-6">
-              <span>Religion</span>
-              <h6>{{ school.religion }}</h6>
+              <span>State of Origin</span>
+              <h6>{{ school.state }}</h6>
             </div>
           </div>
           <div class="row">

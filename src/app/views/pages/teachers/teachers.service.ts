@@ -15,6 +15,7 @@ import {
   ITeacherAttendaceQueryDetail,
   ITeacherAttendanceDetail,
 } from './teacher-report-detail/teacher-report-detail.component';
+import { IQualificationBySchool } from './teachers-qualification-by-school/teachers-qualification-by-school.component';
 
 const BASE_URL = 'https://school-census.herokuapp.com';
 const GET_ALL_SCHOOLS = '/api/v1/teacher/get-teachers';
@@ -162,6 +163,31 @@ export class TeachersService {
               count: item.count,
               qualification: item.qualification,
               state: item.state,
+            });
+          });
+          console.log(response);
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+  getTeachersQualificationBySchool(): Observable<IQualificationBySchool[]> {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get<IQualificationBySchool[]>(
+        `${BASE_URL}/api/v1/teacher/qualification/filter-report-by-school/state?state=${user.state_access}`
+      )
+      .pipe(
+        map((response: any) => {
+          const data: IQualificationBySchool[] = [];
+          response.forEach((item) => {
+            data.push({
+              count: item.count,
+              qualification: item.qualification,
+              state: item.state,
+              schoolName: item.schoolname,
             });
           });
           console.log(response);

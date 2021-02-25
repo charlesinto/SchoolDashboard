@@ -54,7 +54,6 @@
                     <mat-select
                       placeholder="Local Government Area"
                       [formControl]="lgaSelected"
-                      (selectionChange)="onlgaSelectionChange($event)"
                       multiple
                     >
                       <mat-select-trigger>
@@ -147,7 +146,7 @@
           <div class="col-md-12">
             <div class="px-3">
               <mat-form-field>
-                <mat-label>Filter</mat-label>
+                <mat-label>Search</mat-label>
                 <input
                   matInput
                   (keyup)="applyFilter($event)"
@@ -307,13 +306,9 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
               <span>School Owner</span>
               <h6>{{ school.owner }}</h6>
-            </div>
-            <div class="col-xl-6">
-              <span>School Number</span>
-              <h6>{{ school.address }}</h6>
             </div>
           </div>
           <div class="row">

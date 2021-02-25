@@ -177,10 +177,20 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     ) {
       this.dataSource.data = this.schoolDataBase;
     } else if (this.lgaSelected.value.length > 0) {
-      if (!this.lgaSelected.value.includes('All'))
+      if (!this.lgaSelected.value.includes('All')) {
         this.dataSource.data = this.schoolDataBase.filter((item) =>
           this.lgaSelected.value.includes(item.lga)
         );
+      } else {
+        console.log('called here now o');
+        if (this.statesSelected.value.includes('All')) {
+          this.dataSource.data = this.schoolDataBase;
+        } else {
+          this.dataSource.data = this.schoolDataBase.filter((item) =>
+            this.statesSelected.value.includes(item.state)
+          );
+        }
+      }
     } else if (this.statesSelected.value.length > 0) {
       if (!this.statesSelected.value.includes('All'))
         this.dataSource.data = this.schoolDataBase.filter((item) =>

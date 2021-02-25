@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
+  Input,
+} from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { TeachersService } from './teachers.service';
@@ -10,6 +17,8 @@ import {
 } from '../../services/app-service/app-service.service';
 import { School } from '../schools/schools.component';
 import { SchoolsService } from '../schools/schools.service';
+import { Chart } from 'chart.js/dist/Chart.min.js';
+import { LayoutConfigService } from 'app/core/_base/layout';
 
 @Component({
   selector: 'kt-teachers',
@@ -24,7 +33,7 @@ export class TeachersComponent implements OnInit {
     'surname',
     'otherNames',
     'schoolName',
-    'state',
+    'gender',
     'actions',
   ];
   dataSource = new MatTableDataSource<Teacher>(this.ELEMENT_DATA);
@@ -49,13 +58,19 @@ export class TeachersComponent implements OnInit {
   schoolDataBase: School[] = [];
 
   teacherDatabase: Teacher[] = [];
+
+  totalMale = 0;
+  totalFemale = 0;
+  @Input() data: { labels: string[]; datasets: any[] };
+  @ViewChild('chart', { static: true }) chart: ElementRef;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   constructor(
     private changeDetectRef: ChangeDetectorRef,
     private teacherService: TeachersService,
     private schoolService: SchoolsService,
-    private appService: AppServiceService
+    private appService: AppServiceService,
+    private layoutConfigService: LayoutConfigService
   ) {}
 
   ngOnInit() {
@@ -63,6 +78,57 @@ export class TeachersComponent implements OnInit {
     this.getSchools();
     this.getUserAccessibleState();
     this.getUserAccessibleLocals();
+  }
+  initChartJS() {
+    // For more information about the chartjs, visit this link
+    // https://www.chartjs.org/docs/latest/getting-started/usage.html
+
+    const chart = new Chart(this.chart.nativeElement, {
+      type: 'bar',
+      data: this.data,
+      options: {
+        title: {
+          display: false,
+        },
+        tooltips: {
+          intersect: false,
+          mode: 'nearest',
+          xPadding: 10,
+          yPadding: 10,
+          caretPadding: 10,
+        },
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        barRadius: 4,
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              gridLines: true,
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              display: true,
+              stacked: true,
+              gridLines: true,
+            },
+          ],
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          },
+        },
+      },
+    });
   }
   getSchools() {
     this.loadingFilterBox = true;
@@ -84,8 +150,29 @@ export class TeachersComponent implements OnInit {
         this.loading = false;
         this.dataSource.data = data;
         this.totalCount = data.length;
+        data.forEach((item) => {
+          if (item.gender.toLowerCase().trim() === 'male') {
+            this.totalMale += 1;
+          } else {
+            this.totalFemale += 1;
+          }
+        });
         this.ELEMENT_DATA = data;
         this.teacherDatabase = data;
+        this.data = {
+          labels: ['Male', 'Female'],
+          datasets: [
+            {
+              // label: 'dataset 1',
+              backgroundColor: this.layoutConfigService.getConfig(
+                'colors.state.success'
+              ),
+              data: [this.totalMale, this.totalFemale],
+            },
+          ],
+        };
+
+        this.initChartJS();
         this.changeDetectRef.detectChanges();
       },
       (error) => {
@@ -161,7 +248,13 @@ export class TeachersComponent implements OnInit {
         this.lgaSelected.value.includes(item.lga.trim())
       );
     } else {
-      this.schools = this.schoolDataBase;
+      if (this.statesSelected.value.includes('All')) {
+        this.schools = this.schoolDataBase;
+      } else {
+        this.schools = this.schoolDataBase.filter((item) =>
+          this.statesSelected.value.includes(item.state)
+        );
+      }
     }
   }
   filterData() {
@@ -171,6 +264,7 @@ export class TeachersComponent implements OnInit {
       this.schoolSelected.value.includes('All')
     ) {
       this.dataSource.data = this.teacherDatabase;
+      this.reComputeGraph(this.dataSource.data);
       this.totalCount = this.teacherDatabase.length;
     } else if (this.schoolSelected.value.length > 0) {
       if (!this.schoolSelected.value.includes('All')) {
@@ -178,10 +272,40 @@ export class TeachersComponent implements OnInit {
           this.schoolSelected.value.includes(item.schoolName)
         );
         this.totalCount = this.dataSource.data.length;
+        this.reComputeGraph(this.dataSource.data);
+      } else {
+        this.dataSource.data = this.teacherDatabase;
+        this.totalCount = this.dataSource.data.length;
+        this.reComputeGraph(this.dataSource.data);
       }
     }
 
     this.changeDetectRef.detectChanges();
+  }
+  reComputeGraph(data: Teacher[]) {
+    this.totalFemale = 0;
+    this.totalMale = 0;
+    data.forEach((item) => {
+      if (item.gender.trim().toLowerCase() === 'male') {
+        this.totalMale += 1;
+      } else {
+        this.totalFemale += 1;
+      }
+    });
+    this.data = {
+      labels: ['Male', 'Female'],
+      datasets: [
+        {
+          // label: 'dataset 1',
+          backgroundColor: this.layoutConfigService.getConfig(
+            'colors.state.success'
+          ),
+          data: [this.totalMale, this.totalFemale],
+        },
+      ],
+    };
+
+    this.initChartJS();
   }
 }
 

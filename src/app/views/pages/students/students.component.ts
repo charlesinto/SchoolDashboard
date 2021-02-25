@@ -20,11 +20,11 @@ export class StudentsComponent implements OnInit {
   ELEMENT_DATA: Student[] = [];
   displayedColumns = [
     'select',
-    'admissionNumber',
+    'registrationNumber',
     'surname',
     'otherNames',
     'schoolName',
-    'state',
+    'gender',
     'actions',
   ];
   dataSource = new MatTableDataSource<Student>(this.ELEMENT_DATA);
@@ -161,7 +161,13 @@ export class StudentsComponent implements OnInit {
         this.lgaSelected.value.includes(item.lga.trim())
       );
     } else {
-      this.schools = this.schoolDataBase;
+      if (this.statesSelected.value.includes('All')) {
+        this.schools = this.schoolDataBase;
+      } else {
+        this.schools = this.schoolDataBase.filter((item) =>
+          this.statesSelected.value.includes(item.state)
+        );
+      }
     }
   }
   filterData() {

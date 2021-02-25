@@ -4,7 +4,7 @@
       *ngIf="loadingFilterBox"
       mode="indeterminate"
     ></mat-progress-bar>
-    <kt-portlet [class]="'kt-portlet--height-fluid'">
+    <kt-portlet>
       <kt-portlet-header
         [title]="'Filter Report'"
         [class]="
@@ -141,10 +141,32 @@
         <!-- Checkbox Column -->
         <ng-container>
           <div class="container">
-            <div class="row">
+            <div class="row mb-2">
               <div class="col-xl-12">
                 <div class="d-flex justify-content-center align-items-center">
                   <h1>{{ totalCount }}</h1>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="kt-widget14__chart" style="height: 150px">
+                <canvas #chart></canvas>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6">
+                <div class="">
+                  <div>
+                    <h5 class="">Total Male</h5>
+                    <h1 class="text-success text-center">{{ totalMale }}</h1>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <div>
+                  <h5 class="">Total Female</h5>
+                  <h1 class="text-danger text-center">{{ totalFemale }}</h1>
                 </div>
               </div>
             </div>
@@ -239,10 +261,10 @@
                   {{ element.schoolName }}
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="state">
-                <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
+              <ng-container matColumnDef="gender">
+                <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                  {{ element.state }}
+                  {{ element.gender }}
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="actions">
@@ -330,11 +352,13 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
               <span>School</span>
               <h6>{{ school.schoolName }}</h6>
             </div>
-            <div class="col-xl-6">
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
               <span>Email Address</span>
               <h6>{{ school.email }}</h6>
             </div>
