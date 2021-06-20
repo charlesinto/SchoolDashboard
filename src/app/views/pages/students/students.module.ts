@@ -108,10 +108,13 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapte
 // import { SchoolsService } from './schools.service';
 // import { AgmCoreModule } from '@agm/core';
 import { StudentsService } from './students.service';
+import { AppServiceService } from '../../services/app-service/app-service.service';
+import { SchoolsService } from '../schools/schools.service';
+import { UploadStudentComponent } from './uploadstudents/upload-teacher-component';
 
 @NgModule({
-  declarations: [StudentsComponent],
-  providers: [StudentsService],
+  declarations: [StudentsComponent, UploadStudentComponent],
+  providers: [StudentsService, AppServiceService, SchoolsService],
   imports: [
     CommonModule,
     StudentsRoutingModule,
@@ -165,5 +168,6 @@ import { StudentsService } from './students.service';
     FormsModule,
     ReactiveFormsModule,
   ],
+  entryComponents: [UploadStudentComponent],
 })
 export class StudentsModule {}

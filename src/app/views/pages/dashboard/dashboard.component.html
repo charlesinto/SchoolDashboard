@@ -71,7 +71,7 @@
         >
           <kt-portlet-body [class]="'kt-portlet__body--fluid'">
             <kt-widget26
-              [value]="'0'"
+              [value]="enumerators"
               [desc]="'Total Enumerators'"
               [options]="chartOptions4"
             ></kt-widget26>
@@ -92,6 +92,101 @@
       </kt-portlet-body>
     </kt-portlet>
   </div> -->
+</div>
+
+<div class="col-xl-12 my-4">
+  <mat-progress-bar
+    *ngIf="loadingAttendanceReport"
+    mode="indeterminate"
+  ></mat-progress-bar>
+  <kt-portlet>
+    <kt-portlet-header
+      [title]="'Best Performing School in Attendance'"
+      [class]="
+        'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+      "
+    >
+      <ng-container ktPortletTools>
+        <!-- <kt-context-menu></kt-context-menu> -->
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body [class]="'kt-portlet__body--fit'">
+      <!-- Checkbox Column -->
+      <ng-container>
+        <div class="container">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-8">
+                <form (ngSubmit)="filterData()" class="pb-4">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Choose a date</mat-label>
+                        <input
+                          [formControl]="dateRange"
+                          matInput
+                          type="text"
+                          name="daterange"
+                          value=""
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4 pl-5">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        style="width: 100%"
+                        aria-label="Example icon button with a home icon"
+                      >
+                        <mat-icon>filter_list</mat-icon>
+                        Filter
+                      </button>
+                    </div>
+                    <div class="col-md-4">
+                      <button
+                        mat-raised-button
+                        aria-label="Example icon button with a home icon"
+                        style="width: 100%"
+                        (click)="reset($event)"
+                      >
+                        <mat-icon>filter_list</mat-icon>
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="d-flex justify-content-center align-items-center">
+                <!-- <kt-widget14></kt-widget14> -->
+                <div class="kt-widget12__chart" style="height: 250px">
+                  <canvas
+                    #chart
+                    id="kt_chart_order_statistics"
+                    height="312"
+                    style="width: 100% !important"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row py-3">
+            <div class="col-xl-12">
+              <div class="text-center mb-2">
+                <h4>{{ schoolname }}</h4>
+              </div>
+              <div class="text-center mb-2">
+                <h4>{{ state }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </kt-portlet-body>
+  </kt-portlet>
 </div>
 
 <!-- <kt-portlet>

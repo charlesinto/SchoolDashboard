@@ -291,6 +291,10 @@ export class MenuConfig {
               title: 'School Distribution by LGA',
               page: '/schools/schools-by-lga',
             },
+            // {
+            //   title: 'School Distribution by Gender',
+            //   page: '/schools/schools-by-gender',
+            // },
           ],
         },
         {
@@ -319,6 +323,18 @@ export class MenuConfig {
               title: 'Teachers Qualification',
               page: '/teachers/teachers-by-qualification',
             },
+            {
+              title: 'Teachers Qualification By School',
+              page: '/teachers/teachers-qualification-by-schoool',
+            },
+            {
+              title: 'Subject Distribution',
+              page: '/teachers/teachers-distribution-by-subject',
+            },
+            // {
+            //   title: 'Teachers Distribution by Subject',
+            //   page: '/teachers/teachers-distribution-by-subject',
+            // },
           ],
           // submenu: [
           //   {

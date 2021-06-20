@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mb-2">
   <div class="col-xl-8">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <kt-portlet [class]="'kt-portlet--height-fluid'">
@@ -94,6 +94,28 @@
             </div>
           </div>
         </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet [class]="'kt-portlet--height-fluid'">
+      <kt-portlet-header
+        [title]="''"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <kt-context-menu></kt-context-menu>
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <div class="kt-widget14__chart" style="height: 280px">
+          <canvas #chart></canvas>
+        </div>
       </kt-portlet-body>
     </kt-portlet>
   </div>

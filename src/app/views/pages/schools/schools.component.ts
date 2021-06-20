@@ -15,6 +15,11 @@ import {
   ILocalGovernments,
   AppServiceService,
 } from '../../services/app-service/app-service.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
+type AOA = any[][];
 
 @Component({
   selector: 'kt-schools',
@@ -22,28 +27,6 @@ import {
   styleUrls: ['./schools.component.scss'],
 })
 export class SchoolsComponent implements OnInit, AfterViewInit {
-  // ELEMENT_DATA: Element[] = [
-  //   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  //   { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  //   { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  //   { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  //   { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  //   { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  //   { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  //   { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  //   { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  //   { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  //   { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
-  //   { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
-  //   { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
-  //   { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
-  //   { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
-  //   { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
-  //   { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
-  //   { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
-  //   { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
-  //   { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
-  // ];
   ELEMENT_DATA: School[] = [];
   displayedColumns = [
     'select',
@@ -64,10 +47,18 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
   lat = 9.0765;
   lng = 7.3986;
   zoomLevel = 8;
+  data: AOA = [
+    [1, 2],
+    [3, 4],
+  ];
+  wopts: XLSX.WritingOptions = { bookType: 'xlsx', type: 'array' };
+  fileName: string = 'SheetJS.xlsx';
 
   locations: { id?: number; lat: string; lng: string }[] = [];
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
+  @ViewChild('table', { static: false }) table: ElementRef;
 
   statesSelected = new FormControl('', Validators.compose([]));
   lgaSelected = new FormControl('', Validators.compose([]));
@@ -82,6 +73,8 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
 
   schoolOnView: School;
 
+  state_access: string;
+
   constructor(
     private schoolService: SchoolsService,
     private changeDetectRef: ChangeDetectorRef,
@@ -93,9 +86,39 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     this.getUserAccessibleState();
     this.getUserAccessibleLocals();
     this.getSchools();
+    this.state_access = this.appService.getUserStateAccess();
+    if (this.state_access.toLowerCase() !== 'all') {
+      this.statesSelected.setValue([this.state_access]);
+      this.statesSelected.disable();
+    }
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  ExportTOExcel2(): void {
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.data);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, this.fileName);
+  }
+
+  ExportTOExcel() {
+    // let targetTableElm = document.getElementById('ExampleMaterialTable');
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+      this.dataSource.filteredData
+    );
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, 'schools.xlsx');
   }
 
   getUserAccessibleState() {
@@ -158,6 +181,12 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     console.log(element);
     this.selection.clear();
     this.school = element;
+    this.lat = element.schoolCoordinate
+      ? parseInt(element.schoolCoordinate.split(',')[0])
+      : null;
+    this.lng = element.schoolCoordinate
+      ? parseInt(element.schoolCoordinate.split(',')[1])
+      : null;
     this.editMode = true;
   }
   closeDetailPage() {
@@ -171,10 +200,20 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     ) {
       this.dataSource.data = this.schoolDataBase;
     } else if (this.lgaSelected.value.length > 0) {
-      if (!this.lgaSelected.value.includes('All'))
+      if (!this.lgaSelected.value.includes('All')) {
         this.dataSource.data = this.schoolDataBase.filter((item) =>
           this.lgaSelected.value.includes(item.lga)
         );
+      } else {
+        console.log('called here now o');
+        if (this.statesSelected.value.includes('All')) {
+          this.dataSource.data = this.schoolDataBase;
+        } else {
+          this.dataSource.data = this.schoolDataBase.filter((item) =>
+            this.statesSelected.value.includes(item.state)
+          );
+        }
+      }
     } else if (this.statesSelected.value.length > 0) {
       if (!this.statesSelected.value.includes('All'))
         this.dataSource.data = this.schoolDataBase.filter((item) =>
@@ -202,6 +241,46 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     );
     this.schoolOnView = this.schoolDataBase[index];
     this.openInfoWindows.push(item.id);
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  exportPDF() {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+
+    const columns = [];
+    Object.keys(this.schoolDataBase[0])
+      .splice(2, 9)
+      .forEach((key) => {
+        columns.push({
+          header: key.toUpperCase(),
+          dataKey: key,
+        });
+      });
+
+    const data = [];
+    this.dataSource.data.forEach((item) => {
+      data.push({ ...item });
+    });
+    const user = this.appService.getUser();
+    autoTable(doc, {
+      columns: columns,
+      body: data,
+      didDrawPage: (dataArg) => {
+        doc.setFontSize(20);
+        doc.setTextColor(40);
+        if (user.state_access.toLocaleLowerCase() === 'all') {
+          doc.text('All Schools', dataArg.settings.margin.left, 10);
+        } else {
+          doc.text(`${user.state_access}`, dataArg.settings.margin.left, 10);
+        }
+      },
+    });
+    doc.save('schools.pdf');
+    // console.log('called in exit');
   }
   getLocation(): void {
     console.log('cal');

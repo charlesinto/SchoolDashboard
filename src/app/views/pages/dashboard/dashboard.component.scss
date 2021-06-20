@@ -1,7 +1,13 @@
 :host {
-	::ng-deep {
-		ngb-tabset > .nav-tabs {
-			display: none;
-		}
-	}
+  ::ng-deep {
+    ngb-tabset > .nav-tabs {
+      display: none;
+    }
+  }
+}
+
+.kt-widget12__chart {
+  width: 100%;
+  max-width: 800px;
+  height: 300px;
 }

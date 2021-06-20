@@ -25,19 +25,19 @@
                     <mat-select
                       placeholder="State"
                       [formControl]="statesSelected"
-                      multiple
+
                       (selectionChange)="onStateSelectionChange($event)"
                     >
                       <mat-select-trigger>
                         {{
-                          statesSelected.value ? statesSelected.value[0] : ""
+                          statesSelected.value
                         }}
-                        <span
+                        <!-- <span
                           *ngIf="statesSelected.value?.length > 1"
                           class="example-additional-selection"
                         >
                           (+{{ statesSelected.value.length - 1 }} others)
-                        </span>
+                        </span> -->
                       </mat-select-trigger>
                       <mat-option [value]="'All'">All</mat-option>
                       <mat-option
@@ -53,17 +53,17 @@
                     <mat-select
                       placeholder="Local Government Area"
                       [formControl]="lgaSelected"
-                      multiple
+
                       (selectionChange)="onlgaSelectionChange($event)"
                     >
                       <mat-select-trigger>
-                        {{ lgaSelected.value ? lgaSelected.value[0] : "" }}
-                        <span
+                        {{ lgaSelected.value  }}
+                        <!-- <span
                           *ngIf="lgaSelected.value?.length > 1"
                           class="example-additional-selection"
                         >
                           (+{{ lgaSelected.value.length - 1 }} others)
-                        </span>
+                        </span> -->
                       </mat-select-trigger>
                       <mat-option
                         *ngFor="let topping of localgovernments"
@@ -78,18 +78,18 @@
                     <mat-select
                       placeholder="School"
                       [formControl]="schoolSelected"
-                      multiple
+
                     >
                       <mat-select-trigger>
                         {{
-                          schoolSelected.value ? schoolSelected.value[0] : ""
+                          schoolSelected.value
                         }}
-                        <span
+                        <!-- <span
                           *ngIf="schoolSelected.value?.length > 1"
                           class="example-additional-selection"
                         >
                           (+{{ schoolSelected.value.length - 1 }} others)
-                        </span>
+                        </span> -->
                       </mat-select-trigger>
                       <mat-option
                         *ngFor="let topping of schools"
@@ -168,6 +168,44 @@
                 </div>
               </div>
             </form>
+          </div>
+        </ng-container>
+      </kt-portlet-body>
+    </kt-portlet>
+  </div>
+  <div class="col-xl-4">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+    <kt-portlet>
+      <kt-portlet-header
+        [title]="'Attendance Distribution'"
+        [class]="
+          'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+        "
+      >
+        <ng-container ktPortletTools>
+          <!-- <kt-context-menu></kt-context-menu> -->
+        </ng-container>
+      </kt-portlet-header>
+      <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <!-- Checkbox Column -->
+        <ng-container>
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="d-flex justify-content-center align-items-center">
+                  <!-- <kt-widget14></kt-widget14> -->
+                  <div class="kt-widget12__chart" style="height: 250px">
+                    <canvas
+                      #chart
+                      id="kt_chart_order_statistics"
+                      height="312"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
           </div>
         </ng-container>
       </kt-portlet-body>

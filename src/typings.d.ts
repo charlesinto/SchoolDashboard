@@ -1,7 +1,8 @@
 /* SystemJS module definition */
+
 declare var module: NodeModule;
 interface NodeModule {
-	id: string;
+  id: string;
 }
 
 declare var KTMenu: any;
@@ -14,3 +15,6 @@ declare var KTPortlet: any;
 declare var KTDialog: any;
 declare var KTWizard: any;
 declare var Chart: any;
+
+// declare var $: JQueryStatic;
+// declare var jQuery: JQueryStatic;

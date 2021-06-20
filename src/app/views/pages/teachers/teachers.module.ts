@@ -109,9 +109,10 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapte
 import { TeachersService } from './teachers.service';
 import { SchoolsService } from '../schools/schools.service';
 import { AppServiceService } from '../../services/app-service/app-service.service';
+import { UploadTeacherComponent } from './uploadteachers/upload-teacher-component';
 
 @NgModule({
-  declarations: [TeachersComponent],
+  declarations: [TeachersComponent, UploadTeacherComponent],
   providers: [TeachersService, SchoolsService, AppServiceService],
   imports: [
     CommonModule,
@@ -166,5 +167,6 @@ import { AppServiceService } from '../../services/app-service/app-service.servic
     FormsModule,
     ReactiveFormsModule,
   ],
+  entryComponents: [UploadTeacherComponent],
 })
 export class TeachersModule {}

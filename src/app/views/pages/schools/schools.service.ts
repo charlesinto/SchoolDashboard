@@ -8,7 +8,8 @@ import { User } from '../../../core/auth/_models/user.model';
 import { ISchoolByState } from './school-by-state/school-by-state.component';
 import { ISchoolByLGA } from './school-lga/school-lga.component';
 
-const BASE_URL = 'https://school-census.herokuapp.com';
+// const BASE_URL = 'https://school-census.herokuapp.com';
+const BASE_URL = 'http://159.89.90.214:8000';
 const GET_ALL_SCHOOLS = '/api/v1/school/get-schools';
 const GET_SCHOOL_BY_STATE = '/api/v1/school/get-schools-by-state';
 @Injectable({

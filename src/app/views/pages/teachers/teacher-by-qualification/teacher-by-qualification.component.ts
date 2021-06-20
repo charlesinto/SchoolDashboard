@@ -5,17 +5,20 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ElementRef,
+  Input,
 } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TeachersService } from '../teachers.service';
+import { Chart } from 'chart.js/dist/Chart.min.js';
+import { LayoutConfigService } from 'app/core/_base/layout';
 
 @Component({
   selector: 'kt-teacher-by-qualification',
   templateUrl: './teacher-by-qualification.component.html',
   styleUrls: ['./teacher-by-qualification.component.scss'],
 })
-export class TeacherByQualificationComponent implements OnInit {
+export class TeacherByQualificationComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: ITeacherQualificationByState[] = [];
   displayedColumns = ['state', 'qualification', 'count'];
   dataSource = new MatTableDataSource<ITeacherQualificationByState>(
@@ -29,12 +32,16 @@ export class TeacherByQualificationComponent implements OnInit {
   lat = 51.678418;
   lng = 7.809007;
   totalCount: number = 0;
+
+  @Input() data: { labels: string[]; datasets: any[] };
+  @ViewChild('chart', { static: true }) chart: ElementRef;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(
     private teacherService: TeachersService,
-    private changeDetectRef: ChangeDetectorRef
+    private changeDetectRef: ChangeDetectorRef,
+    private layoutConfigService: LayoutConfigService
   ) {}
 
   ngOnInit() {
@@ -55,11 +62,77 @@ export class TeacherByQualificationComponent implements OnInit {
           0
         );
         this.changeDetectRef.detectChanges();
+
+        this.data = {
+          labels: data.map((item) => item.qualification),
+          datasets: [
+            {
+              // label: 'dataset 1',
+              backgroundColor: this.layoutConfigService.getConfig(
+                'colors.state.success'
+              ),
+              data: data.map((item) => parseInt(item.count)),
+            },
+          ],
+        };
+
+        this.initChartJS();
       },
       (error) => {
         this.loading = false;
       }
     );
+  }
+  initChartJS() {
+    // For more information about the chartjs, visit this link
+    // https://www.chartjs.org/docs/latest/getting-started/usage.html
+
+    const chart = new Chart(this.chart.nativeElement, {
+      type: 'bar',
+      data: this.data,
+      options: {
+        title: {
+          display: false,
+        },
+        tooltips: {
+          intersect: false,
+          mode: 'nearest',
+          xPadding: 10,
+          yPadding: 10,
+          caretPadding: 10,
+        },
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        barRadius: 4,
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              gridLines: true,
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              display: true,
+              stacked: true,
+              gridLines: true,
+            },
+          ],
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          },
+        },
+      },
+    });
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;

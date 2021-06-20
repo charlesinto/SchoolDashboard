@@ -15,8 +15,11 @@ import {
   ITeacherAttendaceQueryDetail,
   ITeacherAttendanceDetail,
 } from './teacher-report-detail/teacher-report-detail.component';
+import { IQualificationBySchool } from './teachers-qualification-by-school/teachers-qualification-by-school.component';
+import { ISubJectDistribution } from './subject-distribution/subject-distribution.component';
 
-const BASE_URL = 'https://school-census.herokuapp.com';
+// const BASE_URL = 'https://school-census.herokuapp.com';
+const BASE_URL = 'http://159.89.90.214:8000';
 const GET_ALL_SCHOOLS = '/api/v1/teacher/get-teachers';
 
 @Injectable({
@@ -35,6 +38,23 @@ export class TeachersService {
           const teachers: Teacher[] = [];
           response['data'].forEach((item) => {
             teachers.push({
+              otherNames: item['othernames'],
+              surname: item['surname'],
+              gradeLevel: item['gradelevel'],
+              designation: item['designation'],
+              maidenName: item['maidenname'],
+              gender: item['gender'],
+
+              registrationNumber: item['registrationnumber'],
+              oracleNumber: item['oraclenumber'],
+              state: item['state'],
+              schoolName: item['schoolname'],
+              schoolId: item['schoolId'],
+              qualificationDate: item['qualificationdate'],
+              salarySource: item['salarysource'],
+              subjectTaught: item['subjecttaught'],
+              teacherClass: item['teacherclass'],
+              teachingType: item['teachingtype'],
               remarks: item['remarks'],
               exitDate: item['exitdate'],
               email: item['email'],
@@ -49,22 +69,6 @@ export class TeachersService {
               dateOfFirstAppointment: item['dateofpromotion'],
               dateOfBirth: item['dateofbirth'],
               qualification: item['qualification'],
-              gradeLevel: item['gradelevel'],
-              designation: item['designation'],
-              maidenName: item['maidenname'],
-              gender: item['gender'],
-              otherNames: item['othernames'],
-              surname: item['surname'],
-              registrationNumber: item['registrationnumber'],
-              oracleNumber: item['oraclenumber'],
-              state: item['state'],
-              schoolName: item['schoolname'],
-              schoolId: item['schoolId'],
-              qualificationDate: item['qualificationdate'],
-              salarySource: item['salarysource'],
-              subjectTaught: item['subjecttaught'],
-              teacherClass: item['teacherclass'],
-              teachingType: item['teachingtype'],
               profile_url: item['profile_url'],
               leftThumb: item['leftthumb'],
               leftThumbTemplate: item['leftthumbtemplate'],
@@ -162,6 +166,41 @@ export class TeachersService {
               count: item.count,
               qualification: item.qualification,
               state: item.state,
+            });
+          });
+          console.log(response);
+          return data;
+        }),
+        catchError(this.handleHttpError)
+      );
+  }
+  getTeacherSubjectDistribution(): Observable<ISubJectDistribution[]> {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get<ISubJectDistribution[]>(
+        `${BASE_URL}/api/v1/teacher/filter-report/teacher-subject-distribution?state=${user.state_access}`
+      )
+      .pipe(catchError(this.handleHttpError));
+  }
+  getTeachersQualificationBySchool(): Observable<IQualificationBySchool[]> {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get<IQualificationBySchool[]>(
+        `${BASE_URL}/api/v1/teacher/qualification/filter-report-by-school/state?state=${user.state_access}`
+      )
+      .pipe(
+        map((response: any) => {
+          const data: IQualificationBySchool[] = [];
+          response.forEach((item) => {
+            data.push({
+              count: item.count,
+              qualification: item.qualification,
+              state: item.state,
+              schoolName: item.schoolname,
             });
           });
           console.log(response);

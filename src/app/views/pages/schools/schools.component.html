@@ -54,7 +54,6 @@
                     <mat-select
                       placeholder="Local Government Area"
                       [formControl]="lgaSelected"
-                      (selectionChange)="onlgaSelectionChange($event)"
                       multiple
                     >
                       <mat-select-trigger>
@@ -143,106 +142,162 @@
         </ng-container>
       </kt-portlet-header>
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
-        <mat-table #table [dataSource]="dataSource">
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-              >
-              </mat-checkbox>
-            </mat-cell>
-          </ng-container>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-between">
+              <div class="px-3">
+                <mat-form-field>
+                  <mat-label>Search</mat-label>
+                  <input
+                    matInput
+                    (keyup)="applyFilter($event)"
+                    placeholder="Searching for..."
+                    #input
+                  />
+                </mat-form-field>
+              </div>
+              <div class="px-3">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="exportPDF()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export PDF
+                </button>
+                <button
+                  mat-raised-button
+                  color="secondary"
+                  class="ml-2"
+                  (click)="ExportTOExcel()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export Excel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-table
+              #table
+              id="ExampleMaterialTable"
+              [dataSource]="dataSource"
+            >
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="true"
+                  >
+                  </mat-checkbox>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [disabled]="true"
+                  >
+                  </mat-checkbox>
+                </mat-cell>
+              </ng-container>
 
-          <!-- Position Column -->
-          <ng-container matColumnDef="schoolName">
-            <mat-header-cell *matHeaderCellDef> School Name </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.schoolName }}
-            </mat-cell>
-          </ng-container>
-          <!-- Name Column -->
-          <ng-container matColumnDef="schoolNumber">
-            <mat-header-cell *matHeaderCellDef> School Number </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
-          </ng-container>
-          <!-- Weight Column -->
-          <ng-container matColumnDef="state">
-            <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.state }}
-            </mat-cell>
-          </ng-container>
-          <!-- Symbol Column -->
-          <ng-container matColumnDef="schoolCoordinate">
-            <mat-header-cell *matHeaderCellDef>
-              School Coordinate
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.schoolCoordinate }}
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="lga">
-            <mat-header-cell *matHeaderCellDef>
-              Local Government Area
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              {{ element.lga }}
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef>
-              <!-- <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              > -->
-              <!-- </mat-checkbox> -->
-              Actions
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <!-- <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
+              <!-- Position Column -->
+              <ng-container matColumnDef="schoolName">
+                <mat-header-cell *matHeaderCellDef>
+                  School Name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.schoolName }}
+                </mat-cell>
+              </ng-container>
+              <!-- Name Column -->
+              <ng-container matColumnDef="schoolNumber">
+                <mat-header-cell *matHeaderCellDef>
+                  School Number
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.schoolNumber }}
+                </mat-cell>
+              </ng-container>
+              <!-- Weight Column -->
+              <ng-container matColumnDef="state">
+                <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.state }}
+                </mat-cell>
+              </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="schoolCoordinate">
+                <mat-header-cell *matHeaderCellDef>
+                  School Coordinate
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.schoolCoordinate }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="lga">
+                <mat-header-cell *matHeaderCellDef>
+                  Local Government Area
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.lga }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  > -->
+                  <!-- </mat-checkbox> -->
+                  Actions
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <!-- <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox> -->
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    aria-label="Example icon button with a home icon"
+                    (click)="onRowElementClick($event, element)"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                (click)="selection.toggle(row)"
               >
-              </mat-checkbox> -->
-              <button
-                mat-icon-button
-                color="primary"
-                aria-label="Example icon button with a home icon"
-                (click)="onRowElementClick($event, element)"
-              >
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </mat-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            (click)="selection.toggle(row)"
-          >
-          </mat-row>
-        </mat-table>
-        <mat-paginator
-          [pageSizeOptions]="[5, 10, 20]"
-          showFirstLastButtons
-        ></mat-paginator>
+              </mat-row>
+            </mat-table>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </div>
       </kt-portlet-body>
     </kt-portlet>
   </div>
   <div *ngIf="editMode" class="col-xl-4">
-    <kt-portlet [class]="'kt-portlet--height-fluid'">
+    <kt-portlet>
       <ng-container ktPortletTools>
         <div class="container school-detail">
           <div class="row py-4">
@@ -280,20 +335,46 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
               <span>School Owner</span>
               <h6>{{ school.owner }}</h6>
             </div>
+          </div>
+          <div class="row">
             <div class="col-xl-6">
-              <span>School Number</span>
+              <span>Principal</span>
+              <h6>{{ school.principal }}</h6>
+            </div>
+            <div class="col-xl-6">
+              <span>Type of School</span>
+              <h6>{{ school.typeOfSchool }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
+              <span>Owner</span>
+              <h6>{{ school.owner }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
+              <span>Gender Category</span>
+              <h6>{{ school.genderCategory }}</h6>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12">
+              <span>Address</span>
               <h6>{{ school.address }}</h6>
             </div>
           </div>
           <!-- <div class="row">
             <div class="col-xl-12">
-              <agm-map [latitude]="lat" [longitude]="lng">
-                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-              </agm-map>
+              <div style="height: 200px">
+                <agm-map class="h-100" [latitude]="lat" [longitude]="lng">
+                  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                </agm-map>
+              </div>
             </div>
           </div> -->
         </div>

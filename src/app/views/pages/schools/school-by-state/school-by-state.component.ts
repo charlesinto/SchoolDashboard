@@ -9,6 +9,7 @@ import {
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SchoolsService } from '../schools.service';
+import { AppServiceService } from '../../../services/app-service/app-service.service';
 
 @Component({
   selector: 'kt-school-by-state',
@@ -27,19 +28,25 @@ export class SchoolByStateComponent implements OnInit {
   lat = 51.678418;
   lng = 7.809007;
   totalCount: number = 0;
+  state_accces: string = '';
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(
     private schoolService: SchoolsService,
-    private changeDetectRef: ChangeDetectorRef
+    private changeDetectRef: ChangeDetectorRef,
+    private appService: AppServiceService
   ) {}
 
   ngOnInit() {
     this.getSchoolBYSTATE();
+    this.getUserStateAccess();
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+  getUserStateAccess() {
+    this.state_accces = this.appService.getUserStateAccess();
   }
 
   getSchoolBYSTATE() {
@@ -47,7 +54,23 @@ export class SchoolByStateComponent implements OnInit {
     this.schoolService.getSchoolByState().subscribe(
       (data) => {
         this.loading = false;
-        console.log(data);
+        if (this.state_accces.trim().toLowerCase() === 'all') {
+          data.sort((item1, item2) => {
+            if (
+              item1.state.split(' ')[0].toLowerCase() <
+              item2.state.split(' ')[0].toLowerCase()
+            ) {
+              return -1;
+            } else if (
+              item1.state.split(' ')[0].toLowerCase() >
+              item2.state.split(' ')[0].toLowerCase()
+            ) {
+              return 1;
+            }
+
+            return 0;
+          });
+        }
         this.dataSource.data = data;
         this.ELEMENT_DATA = data;
         this.totalCount = this.ELEMENT_DATA.reduce(

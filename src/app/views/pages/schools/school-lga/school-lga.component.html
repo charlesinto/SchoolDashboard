@@ -3,7 +3,8 @@
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <kt-portlet [class]="'kt-portlet--height-fluid'">
       <kt-portlet-header
-        [title]="''"
+        *ngIf="state_accces.trim().toLowerCase() !== 'all'"
+        [title]="state_accces"
         [class]="
           'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
         "
@@ -13,7 +14,7 @@
         </ng-container>
       </kt-portlet-header>
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
-        <mat-table #table [dataSource]="dataSource">
+        <mat-table #table matSort [dataSource]="dataSource">
           <!-- Checkbox Column -->
           <ng-container matColumnDef="select">
             <mat-header-cell *matHeaderCellDef>
@@ -35,7 +36,10 @@
           </ng-container>
 
           <!-- Position Column -->
-          <ng-container matColumnDef="state">
+          <ng-container
+            *ngIf="state_accces.trim().toLowerCase() === 'all'"
+            matColumnDef="state"
+          >
             <mat-header-cell *matHeaderCellDef> State </mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.state }}

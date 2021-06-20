@@ -20,49 +20,54 @@ import {
   IStudentAttendaceQuickView,
   IStudentAttendanceDetail,
 } from './attendance-report-detail/attendance-report-detail.component';
+import { AppServiceService } from '../../services/app-service/app-service.service';
 
-const BASE_URL = 'https://school-census.herokuapp.com';
+// const BASE_URL = 'https://school-census.herokuapp.com';
+const BASE_URL = 'http://159.89.90.214:8000';
+// const BASE_URL = 'http://localhost:8000';
 const GET_ALL_STUDENTS = '/api/v1/student/get-students';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentsService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private appService: AppServiceService
+  ) {}
 
   getStudents(): Observable<Student[]> {
     const user: User = JSON.parse(
       localStorage.getItem(environment.authTokenKey)
     );
+    const endDate = this.appService.formatDate(new Date());
+    const startDate = this.appService.formatDate(
+      this.appService.subtractFromCurrentDate(14)
+    );
     return this.http
-      .get(`${BASE_URL}${GET_ALL_STUDENTS}/${user.state_access}`)
+      .get(
+        `${BASE_URL}${GET_ALL_STUDENTS}/${user.state_access}?startDate=${startDate}&endDate=${endDate}`
+      )
       .pipe(
         map((response) => {
           console.log(response);
           const students: Student[] = [];
           response['data'].forEach((item) => {
             students.push({
-              medicalCondition: item['address'],
-              guardianAddress: item['guardianaddress'],
-              motherFullName: item['motherfullname'],
-              motherOccupation: item['motheroccupation'],
-              fatherFullName: item['fatherfullname'],
-              fatherOccupation: item['fatheroccupation'],
-              fatherTelephone: item['address'],
-              address: item['address'],
               school: item['school'],
-              admissionNumber: item['admissionNumber'],
-              hobby: item['hobby'],
-              dateOfAdmission: item['dateofadmission'],
-              dateOfBirth: item['dateofbirth'],
-              religion: item['religion'],
-              town: item['town'],
-              gender: item['gender'],
               otherNames: item['othernames'],
               surname: item['surname'],
+
+              town: item['town'],
+              gender: item['gender'],
+              riskLevel: item['riskLevel'],
               registrationNumber: item['registrationnumber'],
               studentClass: item['studentclass'],
               newEntrant: item['newEntrant'],
+              hobby: item['hobby'],
+              religion: item['religion'],
+              dateOfAdmission: item['dateofadmission'],
+              dateOfBirth: item['dateofbirth'],
               schoolId: item['schoolid'],
               placeOfBirth: item['placeofbirth'],
               studentflow: item['studentflow'],
@@ -74,6 +79,15 @@ export class StudentsService {
               guardianTelephone: item['guardiantelephone'],
               guardianName: item['guardianname'],
               profile_url: item['profile_url'],
+              admissionNumber: item['admissionNumber'],
+              medicalCondition: item['medicalcondition'],
+              guardianAddress: item['guardianaddress'],
+              motherFullName: item['motherfullname'],
+              motherOccupation: item['motheroccupation'],
+              fatherFullName: item['fatherfullname'],
+              fatherOccupation: item['fatheroccupation'],
+              fatherTelephone: item['fathertelephone'],
+              address: item['address'],
               leftThumb: item['leftthumb'],
               leftThumbTemplate: item['leftthumbtemplate'],
               rightThumb: item['rightthumb'],
@@ -113,6 +127,14 @@ export class StudentsService {
     return throwError(error);
   }
 
+  handleBulkUpload({ schoolId, students }: { schoolId: number; students }) {
+    return this.http
+      .post(`${BASE_URL}/api/v1/student/bulk-upload`, {
+        schoolId,
+        students,
+      })
+      .pipe(catchError(this.handleHttpError));
+  }
   getStudentGenderReport(): Observable<IStudentGenderReport[]> {
     const user: User = JSON.parse(
       localStorage.getItem(environment.authTokenKey)
