@@ -1,28 +1,33 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { IQualificationBySchool } from '../teachers-qualification-by-school/teachers-qualification-by-school.component';
 import { TeachersService } from '../teachers.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'kt-subject-distribution',
   templateUrl: './subject-distribution.component.html',
   styleUrls: ['./subject-distribution.component.scss'],
 })
-export class SubjectDistributionComponent implements OnInit {
-  ELEMENT_DATA: IQualificationBySchool[] = [];
-  displayedColumns = ['state', 'schoolName', 'qualification', 'count'];
-  dataSource = new MatTableDataSource<IQualificationBySchool>(
-    this.ELEMENT_DATA
-  );
-  selection = new SelectionModel<IQualificationBySchool>(true, []);
+export class SubjectDistributionComponent implements OnInit, AfterViewInit {
+  ELEMENT_DATA: ISubJectDistribution[] = [];
+  displayedColumns = ['state', 'schoolname', 'subject', 'count'];
+  dataSource = new MatTableDataSource<ISubJectDistribution>(this.ELEMENT_DATA);
+  selection = new SelectionModel<ISubJectDistribution>(true, []);
   loading: Boolean = false;
   editMode: Boolean = false;
-  school: IQualificationBySchool;
+  school: ISubJectDistribution;
   title = 'My first AGM project';
   lat = 51.678418;
   lng = 7.809007;
   totalCount: number = 0;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(
     private teacherService: TeachersService,
@@ -33,15 +38,19 @@ export class SubjectDistributionComponent implements OnInit {
     this.getReport();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   getReport() {
     this.loading = true;
-    this.teacherService.getTeachersQualificationBySchool().subscribe(
+    this.teacherService.getTeacherSubjectDistribution().subscribe(
       (data) => {
         this.loading = false;
         this.dataSource.data = data;
         this.changeDetectRef.detectChanges();
         this.totalCount = data.reduce(
-          (preVal, currVal: IQualificationBySchool) =>
+          (preVal, currVal: ISubJectDistribution) =>
             (preVal += parseInt(currVal.count)),
           0
         );
@@ -51,4 +60,11 @@ export class SubjectDistributionComponent implements OnInit {
       }
     );
   }
+}
+
+export interface ISubJectDistribution {
+  schoolname: string;
+  state: string;
+  count: string;
+  subject: string;
 }

@@ -2,3 +2,16 @@
   color: #000 !important;
   font-weight: bold;
 }
+
+.yellow-icon {
+  color: #ffcf60;
+}
+
+.green-icon {
+  color: #18e39f;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.yellow-icon svg,
+.green-icon svg {
+  fill: white;
+}

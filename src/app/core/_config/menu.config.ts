@@ -327,6 +327,10 @@ export class MenuConfig {
               title: 'Teachers Qualification By School',
               page: '/teachers/teachers-qualification-by-schoool',
             },
+            {
+              title: 'Subject Distribution',
+              page: '/teachers/teachers-distribution-by-subject',
+            },
             // {
             //   title: 'Teachers Distribution by Subject',
             //   page: '/teachers/teachers-distribution-by-subject',

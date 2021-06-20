@@ -1072,11 +1072,37 @@ export class AppServiceService {
 
     return states;
   }
+  subtractFromCurrentDate(days: number) {
+    var date = new Date();
+    date.setDate(date.getDate() - days);
+    return date;
+  }
+  addDaysToCurrentDate(days: number) {
+    var date = new Date();
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+  formatDate(dateObj: Date) {
+    const date =
+      dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : `${dateObj.getDate()}`;
+    const month =
+      1 + dateObj.getMonth() < 10
+        ? `0${1 + dateObj.getMonth()}`
+        : `${1 + dateObj.getMonth()}`;
+    const year = dateObj.getFullYear();
+    return `${year}-${month}-${date}`;
+  }
   getLocalGovernments(states: string[] = []): ILocalGovernments[] {
     const locals: ILocalGovernments[] = [];
     let filteredStates: IState[] = [];
     if (states.length === 0) {
-      filteredStates = locations.map((item) => item.state);
+      const state_access = this.getUserStateAccess();
+      filteredStates =
+        state_access.toLowerCase() === 'all'
+          ? locations.map((item) => item.state)
+          : locations
+              .filter((item) => [state_access].includes(item.state.name))
+              .map((item) => item.state);
     } else {
       filteredStates = locations
         .filter((item) => states.includes(item.state.name))

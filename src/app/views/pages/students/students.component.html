@@ -105,16 +105,44 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Dropout Risk Level"
+                      [formControl]="riskLevel"
+                    >
+                      <mat-select-trigger>
+                        {{ riskLevel.value }}
+                      </mat-select-trigger>
+                      <mat-option [value]="''">All</mat-option>
+                      <mat-option [value]="'HIGH'">HIGH</mat-option>
+                      <mat-option [value]="'MODERATE'">MODERATE</mat-option>
+                      <mat-option [value]="'NIL'">NO RISK</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4 pl-3">
                   <div class="px-3">
                     <button
                       mat-raised-button
                       color="primary"
+                      style="width: 100%"
                       aria-label="Example icon button with a home icon"
                     >
                       <mat-icon>filter_list</mat-icon>
                       Filter
                     </button>
                   </div>
+                </div>
+                <div class="col-md-4">
+                  <button
+                    mat-raised-button
+                    aria-label="Example icon button with a home icon"
+                    style="width: 100%"
+                    (click)="reset($event)"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                    Reset
+                  </button>
                 </div>
               </div>
               <div class="row"></div>
@@ -171,7 +199,41 @@
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
         <div class="row">
           <div class="col-md-12">
-            <div class="px-3">
+            <div class="d-flex justify-content-between">
+              <div class="px-3">
+                <mat-form-field>
+                  <mat-label>Search</mat-label>
+                  <input
+                    matInput
+                    (keyup)="applyFilter($event)"
+                    placeholder="Searching for..."
+                    #input
+                  />
+                </mat-form-field>
+              </div>
+              <div class="px-3">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="exportPDF()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export PDF
+                </button>
+                <button
+                  mat-raised-button
+                  color="secondary"
+                  class="ml-2"
+                  (click)="ExportTOExcel()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export Excel
+                </button>
+              </div>
+            </div>
+            <!-- <div class="px-3">
               <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <input
@@ -181,6 +243,21 @@
                   #input
                 />
               </mat-form-field>
+            </div> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 pl-4">
+            <div class="custom-file">
+              <input
+                accept="application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;"
+                type="file"
+                class="custom-file-input"
+                id="customFile"
+              />
+              <label class="custom-file-label" for="customFile"
+                >Bulk Upload(Excel)</label
+              >
             </div>
           </div>
         </div>
@@ -194,6 +271,7 @@
                     (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="true"
                   >
                   </mat-checkbox>
                 </mat-header-cell>
@@ -202,6 +280,7 @@
                     (click)="$event.stopPropagation()"
                     (change)="$event ? selection.toggle(row) : null"
                     [checked]="selection.isSelected(row)"
+                    [disabled]="true"
                   >
                   </mat-checkbox>
                 </mat-cell>
@@ -269,6 +348,47 @@
                     (click)="onRowElementClick($event, element)"
                   >
                     <mat-icon>more_vert</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="riskLevel">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  > -->
+                  <!-- </mat-checkbox> -->
+                  Dropout Risk Level
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <!-- <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox> -->
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    aria-label="Example icon button with a home icon"
+                    *ngIf="element.riskLevel === 'HIGH'"
+                  >
+                    <mat-icon>error</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    aria-label="Example icon button with a home icon"
+                    *ngIf="element.riskLevel === 'MODERATE'"
+                  >
+                    <mat-icon class="yellow-icon">error</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    aria-label="Example icon button with a home icon"
+                    *ngIf="element.riskLevel === 'NIL'"
+                  >
+                    <mat-icon class="green-icon">error</mat-icon>
                   </button>
                 </mat-cell>
               </ng-container>

@@ -77,6 +77,7 @@ export class StudentAttendanceComponent implements OnInit {
   totalCount: number = 0;
   schoolsDataBase: School[] = [];
   queryParams: IQueryAttendanceParams;
+  state_access: string;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @Input() data: { labels: string[]; datasets: any[] };
@@ -196,6 +197,11 @@ export class StudentAttendanceComponent implements OnInit {
           },
         ],
       };
+    }
+    this.state_access = this.appService.getUserStateAccess();
+    if (this.state_access.toLowerCase() !== 'all') {
+      this.statesSelected.setValue(this.state_access);
+      this.statesSelected.disable();
     }
     this.initChart();
   }

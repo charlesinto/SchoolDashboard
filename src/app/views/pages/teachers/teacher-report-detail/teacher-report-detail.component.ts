@@ -6,14 +6,17 @@ import {
   ElementRef,
   ChangeDetectorRef,
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Location } from '@angular/common';
 import { LayoutConfigService } from 'app/core/_base/layout';
 import { ActivatedRoute } from '@angular/router';
 import { ITeacherAttendanceQueryParams } from '../teacher-attendance/teacher-attendance.component';
 import { TeachersService } from '../teachers.service';
+import { AppServiceService } from '../../../services/app-service/app-service.service';
+import jsPDF from 'jspdf';
 
+import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'kt-teacher-report-detail',
   templateUrl: './teacher-report-detail.component.html',
@@ -41,16 +44,22 @@ export class TeacherReportDetailComponent implements OnInit {
   state: string = '';
   totalAbsent: number;
   totalPresent: number;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   constructor(
     private location: Location,
     private layoutConfigService: LayoutConfigService,
     private route: ActivatedRoute,
     private teacherService: TeachersService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private appService: AppServiceService
   ) {}
 
   ngOnInit() {
     this.subscribeToRouteQueryChange();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
   subscribeToRouteQueryChange() {
     this.route.queryParams.subscribe((params) => {
@@ -65,6 +74,54 @@ export class TeacherReportDetailComponent implements OnInit {
       this.state = query.state;
       this.queryAttendanceReportDetail(query);
     });
+  }
+  exportPDF() {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+
+    const columns = [
+      {
+        header: 'Oracle Number',
+        dataKey: 'oracleNumber',
+      },
+
+      {
+        header: 'Full Name',
+        dataKey: 'fullName',
+      },
+      {
+        header: 'Attendance Date',
+        dataKey: 'attendanceDate',
+      },
+      {
+        header: 'Status',
+        dataKey: 'status',
+      },
+    ];
+
+    const data = [];
+    this.dataSource.data.forEach((item) => {
+      data.push({ ...item });
+    });
+    console.log(data);
+    const user = this.appService.getUser();
+
+    autoTable(doc, {
+      columns: columns,
+      body: data,
+      didDrawPage: (dataArg) => {
+        doc.setFontSize(20);
+        doc.setTextColor(40);
+        if (user.state_access.toLocaleLowerCase() === 'all') {
+          doc.text('Teachers Attendance', dataArg.settings.margin.left, 10);
+        } else {
+          doc.text(`Teachers Attendance`, dataArg.settings.margin.left, 10);
+        }
+      },
+    });
+    doc.save('teachers_attendance.pdf');
+    // console.log('called in exit');
   }
   queryAttendanceReportDetail(params: ITeacherAttendaceQueryDetail) {
     if (
@@ -116,9 +173,8 @@ export class TeacherReportDetailComponent implements OnInit {
                 .color('#000000')
                 .alpha(0)
                 .rgbString(),
-              pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-                'colors.state.brand'
-              ),
+              pointHoverBackgroundColor:
+                this.layoutConfigService.getConfig('colors.state.brand'),
               pointHoverBorderColor: Chart.helpers
                 .color('#000000')
                 .alpha(0.1)
@@ -258,9 +314,8 @@ export class TeacherReportDetailComponent implements OnInit {
           xPadding: 10,
           caretPadding: 0,
           displayColors: false,
-          backgroundColor: this.layoutConfigService.getConfig(
-            'colors.state.brand'
-          ),
+          backgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
           titleFontColor: '#ffffff',
           cornerRadius: 4,
           footerSpacing: 0,

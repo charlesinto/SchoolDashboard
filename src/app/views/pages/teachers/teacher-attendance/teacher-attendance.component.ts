@@ -22,6 +22,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { IAttendanceSummary } from '../../students/student-attendance/student-attendance.component';
 import { LayoutConfigService } from 'app/core/_base/layout';
 // import { SchoolsService } from 'src/app/view/pages/schools.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const $ = window['$'];
 
@@ -82,6 +84,8 @@ export class TeacherAttendanceComponent implements OnInit {
   ];
   schoolsDataBase: School[] = [];
   schools: School[] = [];
+
+  state_access: string;
 
   queryParams: ITeacherAttendanceQueryParams;
 
@@ -181,6 +185,11 @@ export class TeacherAttendanceComponent implements OnInit {
           },
         ],
       };
+    }
+    this.state_access = this.appService.getUserStateAccess();
+    if (this.state_access.toLowerCase() !== 'all') {
+      this.statesSelected.setValue(this.state_access);
+      this.statesSelected.disable();
     }
     this.initChart();
   }
@@ -287,6 +296,53 @@ export class TeacherAttendanceComponent implements OnInit {
         },
       },
     });
+  }
+  exportPDF() {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+
+    const columns = [
+      {
+        header: 'Class',
+        dataKey: 'class',
+      },
+      {
+        header: 'Status',
+        dataKey: 'status',
+      },
+      {
+        header: 'Full Name',
+        dataKey: 'fullName',
+      },
+      {
+        header: 'Attendance Date',
+        dataKey: 'attendanceDate',
+      },
+    ];
+
+    const data = [];
+    this.dataSource.data.forEach((item) => {
+      data.push({ ...item });
+    });
+    console.log(data);
+    const user = this.appService.getUser();
+
+    autoTable(doc, {
+      columns: columns,
+      body: data,
+      didDrawPage: (dataArg) => {
+        doc.setFontSize(20);
+        doc.setTextColor(40);
+        if (user.state_access.toLocaleLowerCase() === 'all') {
+          doc.text('Students Attendance', dataArg.settings.margin.left, 10);
+        } else {
+          doc.text(`Students Attendance`, dataArg.settings.margin.left, 10);
+        }
+      },
+    });
+    doc.save('Students_Attendance.pdf');
+    // console.log('called in exit');
   }
   subscribeToRouteQueryParamsChange() {
     this.route.queryParams.subscribe((params) => {

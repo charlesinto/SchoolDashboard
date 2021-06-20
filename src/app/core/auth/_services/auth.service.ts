@@ -13,7 +13,8 @@ const API_USERS_URL = 'api/users';
 const API_PERMISSION_URL = 'api/permissions';
 const API_ROLES_URL = 'api/roles';
 
-const BASE_URL = 'https://school-census.herokuapp.com';
+// const BASE_URL = 'https://school-census.herokuapp.com';
+const BASE_URL = 'http://159.89.90.214:8000';
 const LOGIN_URL = '/api/v1/auth/login';
 
 @Injectable()

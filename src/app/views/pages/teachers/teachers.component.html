@@ -193,7 +193,41 @@
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
         <div class="row">
           <div class="col-md-12">
-            <div class="px-3">
+            <div class="d-flex justify-content-between">
+              <div class="px-3">
+                <mat-form-field>
+                  <mat-label>Search</mat-label>
+                  <input
+                    matInput
+                    (keyup)="applyFilter($event)"
+                    placeholder="Searching for..."
+                    #input
+                  />
+                </mat-form-field>
+              </div>
+              <div class="px-3">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="exportPDF()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export PDF
+                </button>
+                <button
+                  mat-raised-button
+                  color="secondary"
+                  class="ml-2"
+                  (click)="ExportTOExcel()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export Excel
+                </button>
+              </div>
+            </div>
+            <!-- <div class="px-3">
               <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <input
@@ -203,6 +237,21 @@
                   #input
                 />
               </mat-form-field>
+            </div> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 pl-4">
+            <div class="custom-file">
+              <input
+                accept="application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;"
+                type="file"
+                class="custom-file-input"
+                id="customFile"
+              />
+              <label class="custom-file-label" for="customFile"
+                >Bulk Upload(Excel)</label
+              >
             </div>
           </div>
         </div>
@@ -216,6 +265,7 @@
                     (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="true"
                   >
                   </mat-checkbox>
                 </mat-header-cell>
@@ -224,6 +274,7 @@
                     (click)="$event.stopPropagation()"
                     (change)="$event ? selection.toggle(row) : null"
                     [checked]="selection.isSelected(row)"
+                    [disabled]="true"
                   >
                   </mat-checkbox>
                 </mat-cell>

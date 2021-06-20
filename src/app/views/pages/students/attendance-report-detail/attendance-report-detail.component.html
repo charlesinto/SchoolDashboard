@@ -107,13 +107,29 @@
                     <button class="dropdown-item">Something else is here</button>
                   </div>
                 </div> -->
+              </div>
             </div>
           </div>
-          </div>
-
         </ng-container>
       </kt-portlet-header>
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+              <div class="px-3">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="exportPDF()"
+                  aria-label="Example icon button with a home icon"
+                >
+                  <mat-icon>filter_list</mat-icon>
+                  Export PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <mat-table #table [dataSource]="dataSource">
           <!-- Checkbox Column -->
           <ng-container matColumnDef="select">

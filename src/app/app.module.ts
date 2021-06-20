@@ -74,6 +74,7 @@ import * as xml from 'highlight.js/lib/languages/xml';
 import * as json from 'highlight.js/lib/languages/json';
 
 import { AppServiceService } from './views/services/app-service/app-service.service';
+import { UploadTeacherComponent } from './views/pages/teachers/uploadteachers/upload-teacher-component';
 
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {

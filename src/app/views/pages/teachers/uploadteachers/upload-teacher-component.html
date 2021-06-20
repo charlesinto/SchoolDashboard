@@ -1,0 +1,127 @@
+<div class="modal-header">
+  <h5 class="modal-title">Bulk Upload Teachers</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true" (click)="c('Close click')">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <kt-portlet-body [class]="'kt-portlet__body--fit'">
+          <ng-container ktPortletTools>
+            <div class="container">
+              <form (ngSubmit)="filterData()" class="pb-4">
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select
+                        placeholder="State"
+                        [formControl]="statesSelected"
+                        (selectionChange)="onStateSelectionChange($event)"
+                        multiple
+                      >
+                        <mat-select-trigger>
+                          {{ statesSelected.value ? statesSelected.value[0] : ""
+                          }}
+                          <span
+                            *ngIf="statesSelected.value?.length > 1"
+                            class="example-additional-selection"
+                          >
+                            (+{{ statesSelected.value.length - 1 }} others)
+                          </span>
+                        </mat-select-trigger>
+
+                        <mat-option [value]="'All'">All</mat-option>
+                        <mat-option
+                          *ngFor="let topping of states"
+                          [value]="topping.name"
+                          >{{ topping.name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select
+                        placeholder="Local Government Area"
+                        [formControl]="lgaSelected"
+                        (selectionChange)="onlgaSelectionChange($event)"
+                        multiple
+                      >
+                        <mat-select-trigger>
+                          {{ lgaSelected.value ? lgaSelected.value[0] : "" }}
+                          <span
+                            *ngIf="lgaSelected.value?.length > 1"
+                            class="example-additional-selection"
+                          >
+                            (+{{ lgaSelected.value.length - 1 }} others)
+                          </span>
+                        </mat-select-trigger>
+                        <mat-option [value]="'All'">All</mat-option>
+                        <mat-option
+                          *ngFor="let topping of localgovernments"
+                          [value]="topping.name"
+                          >{{ topping.name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select
+                        placeholder="School"
+                        [formControl]="schoolSelected"
+                        multiple
+                      >
+                        <mat-select-trigger>
+                          {{ schoolSelected.value ? schoolSelected.value[0] : ""
+                          }}
+                          <span
+                            *ngIf="schoolSelected.value?.length > 1"
+                            class="example-additional-selection"
+                          >
+                            (+{{ schoolSelected.value.length - 1 }} others)
+                          </span>
+                        </mat-select-trigger>
+                        <mat-option [value]="'All'">All</mat-option>
+                        <mat-option
+                          *ngFor="let topping of schools"
+                          [value]="topping.schoolName"
+                          >{{ topping.schoolName }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row"></div>
+              </form>
+            </div>
+          </ng-container>
+        </kt-portlet-body>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-md-12">
+        <div class="html"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+    Close
+  </button>
+  <button
+    [ngClass]="{
+      'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading
+    }"
+    id="kt_login_signin_submit"
+    class="btn btn-primary btn-elevate kt-login__btn-primary"
+    (click)="createCategory()"
+    type="button"
+  >
+    Upload
+  </button>
+</div>

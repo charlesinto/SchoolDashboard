@@ -1,6 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { ITeacherQualificationByState } from '../teacher-by-qualification/teacher-by-qualification.component';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TeachersService } from '../teachers.service';
 
@@ -9,7 +15,9 @@ import { TeachersService } from '../teachers.service';
   templateUrl: './teachers-qualification-by-school.component.html',
   styleUrls: ['./teachers-qualification-by-school.component.scss'],
 })
-export class TeachersQualificationBySchoolComponent implements OnInit {
+export class TeachersQualificationBySchoolComponent
+  implements OnInit, AfterViewInit
+{
   ELEMENT_DATA: IQualificationBySchool[] = [];
   displayedColumns = ['state', 'schoolName', 'qualification', 'count'];
   dataSource = new MatTableDataSource<IQualificationBySchool>(
@@ -28,6 +36,11 @@ export class TeachersQualificationBySchoolComponent implements OnInit {
     private teacherService: TeachersService,
     private changeDetectRef: ChangeDetectorRef
   ) {}
+
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   ngOnInit() {
     this.getReport();

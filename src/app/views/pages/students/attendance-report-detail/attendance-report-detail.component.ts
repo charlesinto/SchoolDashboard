@@ -13,11 +13,14 @@ import {
   IQueryAttendanceParams,
 } from '../student-attendance/student-attendance.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { StudentsService } from '../students.service';
 import { LayoutConfigService } from 'app/core/_base/layout';
+import { AppServiceService } from '../../../services/app-service/app-service.service';
 // import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'kt-attendance-report-detail',
@@ -39,6 +42,7 @@ export class AttendanceReportDetailComponent implements OnInit {
   @Input() data: { labels: string[]; datasets: any[] };
   @Input() type: string = 'doughnut';
   @ViewChild('chart', { static: true }) chart: ElementRef;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   dataSource = new MatTableDataSource<IStudentAttendanceDetail>(
     this.ELEMENT_DATA
   );
@@ -55,14 +59,15 @@ export class AttendanceReportDetailComponent implements OnInit {
   state: string = '';
   totalAbsent: number;
   totalPresent: number;
+
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private studentService: StudentsService,
     private changeDetectRef: ChangeDetectorRef,
-    private layoutConfigService: LayoutConfigService
-  ) // config: NgbDropdownConfig
-  {
+    private layoutConfigService: LayoutConfigService,
+    private appService: AppServiceService // config: NgbDropdownConfig
+  ) {
     // config.autoClose = true;
   }
 
@@ -91,6 +96,56 @@ export class AttendanceReportDetailComponent implements OnInit {
   onBackArrowClick(event) {
     this.location.back();
   }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+  exportPDF() {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+
+    const columns = [
+      {
+        header: 'Class',
+        dataKey: 'class',
+      },
+      {
+        header: 'Status',
+        dataKey: 'status',
+      },
+      {
+        header: 'Full Name',
+        dataKey: 'fullName',
+      },
+      {
+        header: 'Attendance Date',
+        dataKey: 'attendanceDate',
+      },
+    ];
+
+    const data = [];
+    this.dataSource.data.forEach((item) => {
+      data.push({ ...item });
+    });
+    console.log(data);
+    const user = this.appService.getUser();
+
+    autoTable(doc, {
+      columns: columns,
+      body: data,
+      didDrawPage: (dataArg) => {
+        doc.setFontSize(20);
+        doc.setTextColor(40);
+        if (user.state_access.toLocaleLowerCase() === 'all') {
+          doc.text('Students Attendance', dataArg.settings.margin.left, 10);
+        } else {
+          doc.text(`Students Attendance`, dataArg.settings.margin.left, 10);
+        }
+      },
+    });
+    doc.save('Students_Attendance.pdf');
+    // console.log('called in exit');
+  }
   getAttendanceDetails(params: IQueryAttendanceDetail) {
     if (
       params.state.length == 0 &&
@@ -110,7 +165,7 @@ export class AttendanceReportDetailComponent implements OnInit {
             if (item.status.toLowerCase().trim() === 'present') {
               this.totalFemalePresent += 1;
             } else {
-              this.totalFemaleAbsent += 0;
+              this.totalFemaleAbsent += 1;
             }
           } else if (item.male) {
             if (item.status.toLowerCase().trim() === 'present') {
@@ -148,9 +203,8 @@ export class AttendanceReportDetailComponent implements OnInit {
                 .color('#000000')
                 .alpha(0)
                 .rgbString(),
-              pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-                'colors.state.brand'
-              ),
+              pointHoverBackgroundColor:
+                this.layoutConfigService.getConfig('colors.state.brand'),
               pointHoverBorderColor: Chart.helpers
                 .color('#000000')
                 .alpha(0.1)
@@ -288,9 +342,8 @@ export class AttendanceReportDetailComponent implements OnInit {
           xPadding: 10,
           caretPadding: 0,
           displayColors: false,
-          backgroundColor: this.layoutConfigService.getConfig(
-            'colors.state.brand'
-          ),
+          backgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
           titleFontColor: '#ffffff',
           cornerRadius: 4,
           footerSpacing: 0,

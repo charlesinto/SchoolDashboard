@@ -18,7 +18,7 @@ import { LayoutConfigService } from 'app/core/_base/layout';
   templateUrl: './teacher-by-qualification.component.html',
   styleUrls: ['./teacher-by-qualification.component.scss'],
 })
-export class TeacherByQualificationComponent implements OnInit {
+export class TeacherByQualificationComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: ITeacherQualificationByState[] = [];
   displayedColumns = ['state', 'qualification', 'count'];
   dataSource = new MatTableDataSource<ITeacherQualificationByState>(
