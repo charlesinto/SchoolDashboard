@@ -46,7 +46,12 @@ export class StudentsService {
     );
     return this.http
       .get(
-        `${BASE_URL}${GET_ALL_STUDENTS}/${user.state_access}?startDate=${startDate}&endDate=${endDate}`
+        `${BASE_URL}${GET_ALL_STUDENTS}/${user.state_access}?startDate=${startDate}&endDate=${endDate}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: user.accessToken,
+          }),
+        }
       )
       .pipe(
         map((response) => {

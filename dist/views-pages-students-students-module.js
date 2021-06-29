@@ -595,7 +595,11 @@ var StudentsService = /** @class */ (function () {
         var endDate = this.appService.formatDate(new Date());
         var startDate = this.appService.formatDate(this.appService.subtractFromCurrentDate(14));
         return this.http
-            .get("" + BASE_URL + GET_ALL_STUDENTS + "/" + user.state_access + "?startDate=" + startDate + "&endDate=" + endDate)
+            .get("" + BASE_URL + GET_ALL_STUDENTS + "/" + user.state_access + "?startDate=" + startDate + "&endDate=" + endDate, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+                Authorization: user.accessToken,
+            }),
+        })
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (response) {
             console.log(response);
             var students = [];

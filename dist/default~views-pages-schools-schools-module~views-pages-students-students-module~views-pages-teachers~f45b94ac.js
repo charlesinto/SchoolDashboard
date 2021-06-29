@@ -37579,6 +37579,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
 var BASE_URL = 'http://159.89.90.214:8000';
+// const BASE_URL = 'http://localhost:8000';
 var GET_ALL_SCHOOLS = '/api/v1/school/get-schools';
 var GET_SCHOOL_BY_STATE = '/api/v1/school/get-schools-by-state';
 var SchoolsService = /** @class */ (function () {
@@ -37587,8 +37588,13 @@ var SchoolsService = /** @class */ (function () {
     }
     SchoolsService.prototype.getSchools = function () {
         var user = JSON.parse(localStorage.getItem(environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].authTokenKey));
+        console.log('user: ', user);
         return this.http
-            .get("" + BASE_URL + GET_ALL_SCHOOLS + "/" + user.state_access)
+            .get("" + BASE_URL + GET_ALL_SCHOOLS + "/" + user.state_access, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+                Authorization: user.accessToken,
+            }),
+        })
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (response) {
             var schools = [];
             response['data'].forEach(function (item) {

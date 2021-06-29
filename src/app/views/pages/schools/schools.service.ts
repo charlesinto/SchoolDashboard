@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { throwError, Observable } from 'rxjs';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpClient,
+  HttpHeaders,
+} from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { School } from './schools.component';
 import { environment } from 'environments/environment';
@@ -10,6 +14,7 @@ import { ISchoolByLGA } from './school-lga/school-lga.component';
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
 const BASE_URL = 'http://159.89.90.214:8000';
+// const BASE_URL = 'http://localhost:8000';
 const GET_ALL_SCHOOLS = '/api/v1/school/get-schools';
 const GET_SCHOOL_BY_STATE = '/api/v1/school/get-schools-by-state';
 @Injectable({
@@ -21,8 +26,13 @@ export class SchoolsService {
     const user: User = JSON.parse(
       localStorage.getItem(environment.authTokenKey)
     );
+    console.log('user: ', user);
     return this.http
-      .get<School[]>(`${BASE_URL}${GET_ALL_SCHOOLS}/${user.state_access}`)
+      .get<School[]>(`${BASE_URL}${GET_ALL_SCHOOLS}/${user.state_access}`, {
+        headers: new HttpHeaders({
+          Authorization: user.accessToken,
+        }),
+      })
       .pipe(
         map((response: any) => {
           const schools: School[] = [];

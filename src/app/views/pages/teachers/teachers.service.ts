@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { throwError, Observable } from 'rxjs';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpClient,
+  HttpHeaders,
+} from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { User } from '../../../core/auth/_models/user.model';
 import { Teacher } from './teachers.component';
@@ -20,6 +24,7 @@ import { ISubJectDistribution } from './subject-distribution/subject-distributio
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
 const BASE_URL = 'http://159.89.90.214:8000';
+// const BASE_URL = 'http://localhost:8000';
 const GET_ALL_SCHOOLS = '/api/v1/teacher/get-teachers';
 
 @Injectable({
@@ -32,7 +37,11 @@ export class TeachersService {
       localStorage.getItem(environment.authTokenKey)
     );
     return this.http
-      .get(`${BASE_URL}${GET_ALL_SCHOOLS}/${user.state_access}`)
+      .get(`${BASE_URL}${GET_ALL_SCHOOLS}/${user.state_access}`, {
+        headers: new HttpHeaders({
+          Authorization: user.accessToken,
+        }),
+      })
       .pipe(
         map((response: any) => {
           const teachers: Teacher[] = [];

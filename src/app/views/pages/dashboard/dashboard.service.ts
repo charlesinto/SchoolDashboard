@@ -28,7 +28,12 @@ export class DashboardService {
     );
     return this.http
       .get<IDashboardReport>(
-        `${BASE_URL}/api/v1/dashboard?state_access=${user.state_access}`
+        `${BASE_URL}/api/v1/dashboard?state_access=${user.state_access}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: user.accessToken,
+          }),
+        }
       )
       .pipe(
         map((data: any) => {
