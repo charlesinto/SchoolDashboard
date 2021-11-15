@@ -178,7 +178,7 @@ export class AttendanceReportDetailComponent implements OnInit {
         this.totalPresent = this.totalMalePresent + this.totalFemalePresent;
         this.totalAbsent = this.totalFemaleAbsent + this.totalMaleAbsent;
         this.data = {
-          labels: ['Male', 'Female'],
+          labels: ['Female', 'Male'],
           datasets: [
             {
               fill: true,
@@ -212,40 +212,6 @@ export class AttendanceReportDetailComponent implements OnInit {
 
               data: [this.totalMalePresent, this.totalFemalePresent],
             },
-            // {
-            //   fill: true,
-            //   // borderWidth: 0,
-            //   backgroundColor: color(
-            //     this.layoutConfigService.getConfig('colors.state.brand')
-            //   )
-            //     .alpha(0.2)
-            //     .rgbString(),
-            //   borderColor: color(
-            //     this.layoutConfigService.getConfig('colors.state.brand')
-            //   )
-            //     .alpha(0)
-            //     .rgbString(),
-
-            //   pointHoverRadius: 4,
-            //   pointHoverBorderWidth: 12,
-            //   pointBackgroundColor: Chart.helpers
-            //     .color('#000000')
-            //     .alpha(0)
-            //     .rgbString(),
-            //   pointBorderColor: Chart.helpers
-            //     .color('#000000')
-            //     .alpha(0)
-            //     .rgbString(),
-            //   pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-            //     'colors.state.brand'
-            //   ),
-            //   pointHoverBorderColor: Chart.helpers
-            //     .color('#000000')
-            //     .alpha(0.1)
-            //     .rgbString(),
-
-            //   data: [25, 45, 55, 30, 40, 65, 35],
-            // },
           ],
         };
         this.initChart();

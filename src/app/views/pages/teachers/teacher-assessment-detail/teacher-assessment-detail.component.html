@@ -1,0 +1,2220 @@
+<div class="container">
+  <kt-portlet class="py-4">
+    <kt-portlet-header
+      [title]="'Coaching and Mentoring Assessment'"
+      [class]="
+        'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'
+      "
+    >
+      <ng-container ktPortletTools>
+        <div class="row">
+          <div class="col-md-12">
+            <button (click)="goBack()" mat-button>
+              <span>Back</span>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body [class]="'kt-portlet__body--fit'">
+      <ng-container ktPortletTools>
+        <div *ngIf="isloading === true" class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-center py-4">
+              <mat-progress-spinner
+                class="example-margin"
+                [color]="colorSpinner"
+                [mode]="mode"
+                [value]="value"
+                [diameter]="40"
+              >
+              </mat-progress-spinner>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div style="margin-top: 20px">
+            <h6>Summary</h6>
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <div class="d-flex justify-content-center">
+                  <circle-progress
+                    [percent]="totalScore"
+                    [radius]="100"
+                    [outerStrokeWidth]="16"
+                    [innerStrokeWidth]="8"
+                    [outerStrokeColor]="'#78C000'"
+                    [innerStrokeColor]="'#C7E596'"
+                    [subtitle]="'Average Score'"
+                  ></circle-progress>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-2"></div>
+              <div class="col-md-8">
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Score</th>
+                        <th>Remark</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>60 - 100</td>
+                        <td>Effectively Met</td>
+                        <td>
+                          <mat-icon
+                            *ngIf="
+                              data?.score_category === 'Effectively Met(60-75)'
+                            "
+                            class="green-icon"
+                            >check_circle_outline</mat-icon
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>50 - 60</td>
+                        <td>Partially Met</td>
+                        <td>
+                          <mat-icon
+                            *ngIf="
+                              data?.score_category === 'Partially Met(50-70)'
+                            "
+                            class="yellow-icon"
+                            >check_circle_outline</mat-icon
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Below 50</td>
+                        <td>Not Met</td>
+                        <td>
+                          <mat-icon
+                            *ngIf="data?.score_category === 'Not Met(Below 50)'"
+                            class="red-icon"
+                            >check_circle_outline</mat-icon
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+          </div>
+          <h6>Details</h6>
+          <hr />
+          <div class="row px-4 mb-4">
+            <div class="col-md-12">
+              <mat-accordion class="example-headers-align py-2">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title> Lesson Plan </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th rowspan="3" scope="col">Standard</th>
+                          <th scope="col">Criteria</th>
+                          <th scope="col">Effectively Met</th>
+                          <th scope="col">Partially Met</th>
+                          <th scope="col">Not Met</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="align-center" rowspan="4">
+                            Availability and Use of Lesson Plan
+                          </td>
+                          <td>Teacher has lesson plan</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson objective clearly stated in measurable and achievable terms'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson objective clearly stated in measurable and achievable terms'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson objective clearly stated in measurable and achievable terms'
+                                ] === '1'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Lesson taught corresponds with plan and scheme
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson taught corresponds with plan and scheme of work'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson taught corresponds with plan and scheme of work'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Lesson taught corresponds with plan and scheme of work'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Plan meets key requirements (eg. Objective,
+                            Introduction, Presentation, etc.)
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>
+                            Lesson Objective clearly stated in measurable and
+                            achievable terms
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                lessonPlan &&
+                                lessonPlan[
+                                  'Availability and Use of Lesson Plan'
+                                ][
+                                  'Plan meets key requirements(e.g Objective, introduction, Presentation etc.)'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4>Remarks</h4>
+                      <div class="box">
+                        <p>
+                          {{ data ? data["Lesson Plan"]?.remark : "" }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+          <div class="row px-4 mb-4">
+            <div class="col-md-12">
+              <mat-accordion class="example-headers-align py-2">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title> Subject Matter Mastery </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col">Standard</th>
+                          <th scope="col">Criteria</th>
+                          <th scope="col">Effectively Met</th>
+                          <th scope="col">Partially Met</th>
+                          <th scope="col">Not Met</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="align-center" rowspan="10">
+                            Teacher Demonstrates Understanding of Key concepts
+                            and subject content
+                          </td>
+                          <td>Letter sounds</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Alphabetic recognition, reading and writing'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Alphabetic recognition, reading and writing'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Alphabetic recognition, reading and writing'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Blending</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Blending'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Blending'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Blending'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Alphabet recognition, reading and writing</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- < rowspan="0">2</td> -->
+                          <td>Phonemic Awareness</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Phonemic Awareness'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Phonemic Awareness'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Phonemic Awareness'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Vocabulary development</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Vocabulary development'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Vocabulary development'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Vocabulary development'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Word and sentence reading</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Word and sentence reading'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Word and sentence reading'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Word and sentence reading'] === '1'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Reading short paragraphs</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Reading short paragraphs'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Reading short paragraphs'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Reading short paragraphs'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Writing wors, sentences and short paragraphs</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Writing words, sentences and short paragraphs'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Writing words, sentences and short paragraphs'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ][
+                                  'Writing words, sentences and short paragraphs'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Fluency, grammatical accuracy, etc</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Fluency, grammatical accuracy, etc'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <!-- <td rowspan="0">2</td> -->
+                          <td>Proper spelling of words</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Proper spelling of words'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Proper spelling of words'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                subjectMatterMastery &&
+                                subjectMatterMastery[
+                                  'Teacher Demonstrates Understanding of key concepts and subject content'
+                                ]['Proper spelling of words'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4>Remarks</h4>
+                      <div class="box"></div>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+          <div class="row px-4 mb-4">
+            <div class="col-md-12">
+              <mat-accordion class="example-headers-align py-2">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title> Teaching Methodology </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Standard</th>
+                          <th>Criteria</th>
+                          <th>Effectively Met</th>
+                          <th>Partially Met</th>
+                          <th>Not Met</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="align-center" rowspan="2">
+                            Lesson Introduction
+                          </td>
+                          <td>Introduction is apt, exiting and stumulating</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Introduction is apt, exciting and stimulating'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Introduction is apt, exciting and stimulating'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Introduction is apt, exciting and stimulating'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Lesson is linked to previous lesson</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Lesson is linked to previous lesson'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Lesson is linked to previous lesson'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Introduction'][
+                                  'Lesson is linked to previous lesson'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="6">
+                            Lesson Delivery
+                          </td>
+                          <td>Lesson Inclusive of all learners</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson inclusive of all learner'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson inclusive of all learner'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson inclusive of all learner'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Lesson is sequential and proceeds from known to
+                            unknown
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson is sequential and proceeds from known to unknown'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson is sequential and proceeds from known to unknown'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Lesson is sequential and proceeds from known to unknown'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher Organizes learners to learn in different
+                            ways (Individual, peer, group or whole class)
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher organizes learners to leanr in different ways(individual, peer, group or whole class)'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher organizes learners to leanr in different ways(individual, peer, group or whole class)'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher organizes learners to leanr in different ways(individual, peer, group or whole class)'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher rewards/praises learners for their efforts
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher rewards/praises learners for their efforts'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher rewards/praises learners for their efforts'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher rewards/praises learners for their efforts'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Teacher uses variety of methods</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher users variety of methods'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher users variety of methods'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher users variety of methods'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher moves round the classroom to provide support
+                            to all learners
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher moves round the classroom to provide support to all learners'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td></td>
+                          <mat-icon
+                            *ngIf="
+                              teachingMethod &&
+                              teachingMethod['Lesson Delivery'][
+                                'Teacher moves round the classroom to provide support to all learners'
+                              ] === '2'
+                            "
+                            class="yellow-icon"
+                            >check_circle_outline</mat-icon
+                          >
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Lesson Delivery'][
+                                  'Teacher moves round the classroom to provide support to all learners'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="3">
+                            Classroom management
+                          </td>
+                          <td>Orderly arrangement of the classrooom</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '2'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Teacher discourages chorus answer</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Teacher discourages chorus answer'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Teacher discourages chorus answer'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Teacher discourages chorus answer'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Discipline and orderliness in the classroom</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Classroom Management'][
+                                  'Discipline and orderliness in the classroom'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="align-center" rowspan="3">
+                            Time Management
+                          </td>
+                          <td>Lesson starts and ends on time</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Lesson starts and ends on time'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Lesson starts and ends on time'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Lesson starts and ends on time'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Pace was maintained throughout the lesson</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Pace was maintained throughout the lesson'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Pace was maintained throughout the lesson'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'Pace was maintained throughout the lesson'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            All Objectives and class objectives are covered
+                            within the alotted time
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'All objectives and class activities are covered within the alloted time'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'All objectives and class activities are covered within the alloted time'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Time Management'][
+                                  'All objectives and class activities are covered within the alloted time'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="3">
+                            Teacher/Learner Interactions
+                          </td>
+                          <td>Teacher involves learners in the classroom</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher involves learners in classroom activities'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher involves learners in classroom activities'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher involves learners in classroom activities'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Ability of teacher to identify learners by name
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Ability of teachers to identify learners by name'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Ability of teachers to identify learners by name'
+                                ] === '2'
+                              "
+                              class="yello-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Ability of teachers to identify learners by name'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher asks appropriate questions to elicit
+                            responses from learners
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher asks appropriate questions to elicit responses from learners'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher asks appropriate questions to elicit responses from learners'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Teacher/Learner Interaction'][
+                                  'Teacher asks appropriate questions to elicit responses from learners'
+                                ] === '1'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="5">
+                            Learning Assessment(Teacher uses different ways to
+                            assess learning)
+                          </td>
+                          <td>Teacher asks more open-ended questions</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ]['Teacher asks more open-ended questions'] ===
+                                  '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ]['Teacher asks more open-ended questions'] ===
+                                  '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ]['Teacher asks more open-ended questions'] ===
+                                  '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Teacher gives classroom/assignment regualarly</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives classwork/assignments regularly'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives classwork/assignments regularly'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives classwork/assignments regularly'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Learners work books are constructively checked and
+                            marked
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Learners work books are constructively checked and marked'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Learners work books are constructively checked and marked'
+                                ] === '2'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Learners work books are constructively checked and marked'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher provides constructive feedback to learner
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher provides constructive feedback to learners'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher provides constructive feedback to learners'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher provides constructive feedback to learners'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher gives clas work and more around to support
+                            weak learners and assess the work
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives class work and move around to support weak learners and assess the work'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives class work and move around to support weak learners and assess the work'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Learning Asessment(Teacher uses different ways to assess learning)'
+                                ][
+                                  'Teacher gives class work and move around to support weak learners and assess the work'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="2">
+                            Learners Participation
+                          </td>
+                          <td>
+                            Learners participate actively during the lesson
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners particpate actively during the lesson'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners particpate actively during the lesson'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners particpate actively during the lesson'
+                                ] === '2'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Learners ask questions</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners ask questions'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners ask questions'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Learners Participation'][
+                                  'Learners ask questions'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="4">
+                            Availability & Access to Textbooks/Instructional
+                            Resources
+                          </td>
+                          <td>Each learner has a textbook</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Each learner has a textbook'] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Each learner has a textbook'] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Each learner has a textbook'] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Learners make use of their textbooks</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Learners makes use of their textbooks'] ===
+                                  '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Learners makes use of their textbooks'] ===
+                                  '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ]['Learners makes use of their textbooks'] ===
+                                  '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Learners have access to textbooks and other
+                            materials
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have access to textbooks and other materials'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have access to textbooks and other materials'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have access to textbooks and other materials'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Learners have writing materials and could be seen
+                            using them
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have writing materials and could be seen using them'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have writing materials and could be seen using them'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod[
+                                  'Availability & Access to Textbooks/Instructional Resources'
+                                ][
+                                  'Learners have writing materials and could be seen using them'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="align-center" rowspan="3">Conclusion</td>
+                          <td>
+                            Teacher summarizes key points of the lesson the
+                            chalk/white board
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher summarise key points of the lesson on the chalk/white board'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher summarise key points of the lesson on the chalk/white board'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher summarise key points of the lesson on the chalk/white board'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Teacher asks learners relevant questions to recap
+                            the lesson or check learning
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher asks learners relevant question to recap the lesson or check learning'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td></td>
+                          <mat-icon
+                            *ngIf="
+                              teachingMethod &&
+                              teachingMethod['Conclusion'][
+                                'Teacher asks learners relevant question to recap the lesson or check learning'
+                              ] === '2'
+                            "
+                            class="yellow-icon"
+                            >check_circle_outline</mat-icon
+                          >
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher asks learners relevant question to recap the lesson or check learning'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Teacher gives learners homework</td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher gives learners homework'
+                                ] === '3'
+                              "
+                              class="green-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher gives learners homework'
+                                ] === '2'
+                              "
+                              class="yellow-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                          <td>
+                            <mat-icon
+                              *ngIf="
+                                teachingMethod &&
+                                teachingMethod['Conclusion'][
+                                  'Teacher gives learners homework'
+                                ] === '1'
+                              "
+                              class="red-icon"
+                              >check_circle_outline</mat-icon
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4>Remarks</h4>
+                      <div class="box"></div>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+
+          <div style="margin-top: 30px">
+            <div class="row">
+              <div class="col-md-12">
+                <canvas height="300px" #chart></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 30px">
+            <div class="row">
+              <div class="col-md-12">
+                <h5 style="color: #000">Areas of Improvement</h5>
+                <div class="box">
+                  <p>{{ data?.areas_of_improvement }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h5 style="color: #000">Areas of Strength</h5>
+                <div class="box">
+                  <p>{{ data?.areas_of_strength }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 30px">
+            <div class="row mb-3 mt-3">
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.teacher?.surname }} {{ data?.teacher?.othernames }}
+                </h5>
+                <hr />
+                <h5 class="text-center">Name of Teacher Observed</h5>
+              </div>
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.teacher?.phonenumber }}
+                </h5>
+                <hr />
+                <h5 class="text-center">GSM Number</h5>
+              </div>
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.date | date: "medium" }}
+                </h5>
+                <hr />
+                <h5 class="text-center">Signature/Date</h5>
+              </div>
+            </div>
+            <div class="row pt-3">
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.mentor?.firstname }} {{ data?.mentor?.lastname }}
+                </h5>
+                <hr />
+                <h5 class="text-center">Name of Mentor</h5>
+              </div>
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.mentor?.phonenumber }}
+                </h5>
+                <hr />
+                <h5 class="text-center">GSM Number</h5>
+              </div>
+              <div class="col-md-4">
+                <h5 class="text-center" style="color: #000">
+                  {{ data?.date | date: "medium" }}
+                </h5>
+                <hr />
+                <h5 class="text-center">Signature/Date</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </kt-portlet-body>
+  </kt-portlet>
+</div>

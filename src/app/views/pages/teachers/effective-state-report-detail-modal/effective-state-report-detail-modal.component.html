@@ -1,0 +1,104 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Teachers Under {{ data.category }}</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true" (click)="c('Close click')">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>School Name</th>
+                  <th>State</th>
+                  <th>Local Government</th>
+                  <th>Teacher's Fullname</th>
+                  <th>Score</th>
+                  <th>Effectively Met</th>
+                  <th>Assessment Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of assessmentSummary">
+                  <td>
+                    <a>
+                      {{ item.schoolname }}
+                    </a>
+                  </td>
+                  <td>
+                    <a>
+                      {{ item.state }}
+                    </a>
+                  </td>
+
+                  <td>
+                    <a>
+                      {{ item.lga }}
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      [routerLink]="['/teachers/teacher', item.teacherid]"
+                      routerLinkActive="router-link-active"
+                    >
+                      {{ item.surname }} {{ item.othernames }}
+                    </a>
+                  </td>
+
+                  <td>{{ item.score }}%</td>
+                  <td>
+                    <mat-icon
+                      *ngIf="item.score_category === 'Effectively Met(60-75)'"
+                      class="green-icon"
+                      >check_circle_outline</mat-icon
+                    >
+                  </td>
+
+                  <td>{{ item.date | date: "medium" }}</td>
+                  <td>
+                    <a
+                      (click)="c()"
+                      [routerLink]="['teachers/coaching-mentoring']"
+                      [queryParams]="{ assesmentId: item.id }"
+                      mat-stroked-button
+                      color="primary"
+                      >View More</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="loading" class="d-flex justify-content-center">
+            <mat-progress-spinner
+              class="example-margin"
+              [color]="colorSpinner"
+              [mode]="mode"
+              [value]="value"
+            >
+            </mat-progress-spinner>
+          </div>
+          <mat-paginator
+            #paginator
+            [length]="length"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="pageEvent = handlePageChange($event)"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+      Close
+    </button>
+  </div>
+</div>

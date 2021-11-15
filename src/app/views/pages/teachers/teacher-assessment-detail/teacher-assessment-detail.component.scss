@@ -1,0 +1,39 @@
+.align-center {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.box {
+  width: 100%;
+  padding: 20px 16px;
+  background-color: #f7f8fa;
+  border-radius: 10px;
+}
+
+.green-icon {
+  color: #28a745 !important;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.green-icon svg {
+  fill: #28a745 !important;
+}
+
+.yellow-icon {
+  color: #ffc107 !important;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.yellow-icon svg {
+  fill: #ffc107 !important;
+}
+
+.red-icon {
+  color: #dc3545 !important;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.red-icon svg {
+  fill: #dc3545 !important;
+}
+
+.mat-icon {
+  font-size: 30px !important;
+}

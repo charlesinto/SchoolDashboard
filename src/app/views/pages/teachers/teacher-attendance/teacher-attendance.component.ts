@@ -139,9 +139,8 @@ export class TeacherAttendanceComponent implements OnInit {
               .color('#000000')
               .alpha(0)
               .rgbString(),
-            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-              'colors.state.brand'
-            ),
+            pointHoverBackgroundColor:
+              this.layoutConfigService.getConfig('colors.state.brand'),
             pointHoverBorderColor: Chart.helpers
               .color('#000000')
               .alpha(0.1)
@@ -173,9 +172,8 @@ export class TeacherAttendanceComponent implements OnInit {
               .color('#000000')
               .alpha(0)
               .rgbString(),
-            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-              'colors.state.brand'
-            ),
+            pointHoverBackgroundColor:
+              this.layoutConfigService.getConfig('colors.state.brand'),
             pointHoverBorderColor: Chart.helpers
               .color('#000000')
               .alpha(0.1)
@@ -203,7 +201,7 @@ export class TeacherAttendanceComponent implements OnInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        // legend: false,
+        legend: false,
         scales: {
           xAxes: [
             {
@@ -278,9 +276,8 @@ export class TeacherAttendanceComponent implements OnInit {
           xPadding: 10,
           caretPadding: 0,
           displayColors: false,
-          backgroundColor: this.layoutConfigService.getConfig(
-            'colors.state.brand'
-          ),
+          backgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
           titleFontColor: '#ffffff',
           cornerRadius: 4,
           footerSpacing: 0,

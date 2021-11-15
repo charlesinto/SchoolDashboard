@@ -52,6 +52,7 @@ import {
   MAT_DATE_FORMATS,
 } from '@angular/material';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+// import {MatExpansionModule} from '@angular/material/expansion';
 
 // Form controls
 import { DatepickerComponent } from './formcontrols/datepicker/datepicker.component';
@@ -88,6 +89,7 @@ import { ProgressBarComponent } from './buttons-and-indicators/progress-bar/prog
 import { ProgressSpinnerComponent } from './buttons-and-indicators/progress-spinner/progress-spinner.component';
 import { RipplesComponent } from './buttons-and-indicators/ripples/ripples.component';
 // Popups & modals
+
 import {
   DialogComponent,
   ModalComponent,
@@ -110,9 +112,23 @@ import { TeachersService } from './teachers.service';
 import { SchoolsService } from '../schools/schools.service';
 import { AppServiceService } from '../../services/app-service/app-service.service';
 import { UploadTeacherComponent } from './uploadteachers/upload-teacher-component';
+import { TeacherModalViewComponent } from './teacher-modal-view/teacher-modal-view.component';
+import { TeacherAssessmentDetailComponent } from './teacher-assessment-detail/teacher-assessment-detail.component';
+//spiners
+
+import { NgCircleProgressModule } from 'ng-circle-progress';
+import { EffectiveStateReportComponent } from './effective-state-report/effective-state-report.component';
+import { EffectiveStateReportDetailModalComponent } from './effective-state-report-detail-modal/effective-state-report-detail-modal.component';
 
 @NgModule({
-  declarations: [TeachersComponent, UploadTeacherComponent],
+  declarations: [
+    TeachersComponent,
+    UploadTeacherComponent,
+    TeacherModalViewComponent,
+    TeacherAssessmentDetailComponent,
+    EffectiveStateReportComponent,
+    EffectiveStateReportDetailModalComponent,
+  ],
   providers: [TeachersService, SchoolsService, AppServiceService],
   imports: [
     CommonModule,
@@ -122,6 +138,15 @@ import { UploadTeacherComponent } from './uploadteachers/upload-teacher-componen
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyC8aIKLtCcXqEHG_Gfm35Iahplw3HoKzLM',
     // }),
+    NgCircleProgressModule.forRoot({
+      // set defaults here
+      radius: 100,
+      outerStrokeWidth: 16,
+      innerStrokeWidth: 8,
+      outerStrokeColor: '#78C000',
+      innerStrokeColor: '#C7E596',
+      animationDuration: 300,
+    }),
     CommonModule,
     PartialsModule,
     CoreModule,
@@ -167,6 +192,10 @@ import { UploadTeacherComponent } from './uploadteachers/upload-teacher-componen
     FormsModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [UploadTeacherComponent],
+  entryComponents: [
+    UploadTeacherComponent,
+    TeacherModalViewComponent,
+    EffectiveStateReportDetailModalComponent,
+  ],
 })
 export class TeachersModule {}

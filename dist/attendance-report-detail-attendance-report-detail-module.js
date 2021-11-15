@@ -53,7 +53,7 @@ var AttendanceReportDetailRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "canvas {\n  width: 100%;\n  max-width: 683px; }\n\n.mat-header-cell {\n  color: #000 !important;\n  font-weight: bold; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzb251b3JhaC9Eb2N1bWVudHMvY2JjL3NjaG9vbERhc2hib2FyZC9zcmMvYXBwL3ZpZXdzL3BhZ2VzL3N0dWRlbnRzL2F0dGVuZGFuY2UtcmVwb3J0LWRldGFpbC9hdHRlbmRhbmNlLXJlcG9ydC1kZXRhaWwuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxXQUFXO0VBQ1gsZ0JBQWdCLEVBQUE7O0FBR2xCO0VBQ0Usc0JBQXNCO0VBQ3RCLGlCQUFpQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvdmlld3MvcGFnZXMvc3R1ZGVudHMvYXR0ZW5kYW5jZS1yZXBvcnQtZGV0YWlsL2F0dGVuZGFuY2UtcmVwb3J0LWRldGFpbC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbImNhbnZhcyB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDY4M3B4O1xufVxuXG4ubWF0LWhlYWRlci1jZWxsIHtcbiAgY29sb3I6ICMwMDAgIWltcG9ydGFudDtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG59XG4iXX0= */"
+module.exports = "canvas {\n  width: 100%;\n  max-width: 683px;\n}\n\n.mat-header-cell {\n  color: #000 !important;\n  font-weight: bold;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzb251b3JhaC9Eb2N1bWVudHMvY2JjL3NjaG9vbERhc2hib2FyZC9zcmMvYXBwL3ZpZXdzL3BhZ2VzL3N0dWRlbnRzL2F0dGVuZGFuY2UtcmVwb3J0LWRldGFpbC9hdHRlbmRhbmNlLXJlcG9ydC1kZXRhaWwuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL3ZpZXdzL3BhZ2VzL3N0dWRlbnRzL2F0dGVuZGFuY2UtcmVwb3J0LWRldGFpbC9hdHRlbmRhbmNlLXJlcG9ydC1kZXRhaWwuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxXQUFBO0VBQ0EsZ0JBQUE7QUNDRjs7QURFQTtFQUNFLHNCQUFBO0VBQ0EsaUJBQUE7QUNDRiIsImZpbGUiOiJzcmMvYXBwL3ZpZXdzL3BhZ2VzL3N0dWRlbnRzL2F0dGVuZGFuY2UtcmVwb3J0LWRldGFpbC9hdHRlbmRhbmNlLXJlcG9ydC1kZXRhaWwuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJjYW52YXMge1xuICB3aWR0aDogMTAwJTtcbiAgbWF4LXdpZHRoOiA2ODNweDtcbn1cblxuLm1hdC1oZWFkZXItY2VsbCB7XG4gIGNvbG9yOiAjMDAwICFpbXBvcnRhbnQ7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuIiwiY2FudmFzIHtcbiAgd2lkdGg6IDEwMCU7XG4gIG1heC13aWR0aDogNjgzcHg7XG59XG5cbi5tYXQtaGVhZGVyLWNlbGwge1xuICBjb2xvcjogIzAwMCAhaW1wb3J0YW50O1xuICBmb250LXdlaWdodDogYm9sZDtcbn0iXX0= */"
 
 /***/ }),
 
@@ -229,7 +229,7 @@ var AttendanceReportDetailComponent = /** @class */ (function () {
             _this.totalPresent = _this.totalMalePresent + _this.totalFemalePresent;
             _this.totalAbsent = _this.totalFemaleAbsent + _this.totalMaleAbsent;
             _this.data = {
-                labels: ['Male', 'Female'],
+                labels: ['Female', 'Male'],
                 datasets: [
                     {
                         fill: true,

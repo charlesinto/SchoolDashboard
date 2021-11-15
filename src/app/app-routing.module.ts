@@ -105,6 +105,11 @@ const routes: Routes = [
             (m) => m.StudentsModule
           ),
       },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./views/pages/user/user.module').then((m) => m.UserModule),
+      },
 
       {
         path: 'error/403',
@@ -113,8 +118,7 @@ const routes: Routes = [
           type: 'error-v6',
           code: 403,
           title: '403... Access forbidden',
-          desc:
-            "Looks like you don't have permission to access for requested page.<br> Please, contact administrator",
+          desc: "Looks like you don't have permission to access for requested page.<br> Please, contact administrator",
         },
       },
       { path: 'error/:type', component: ErrorPageComponent },

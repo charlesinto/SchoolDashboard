@@ -21,6 +21,7 @@ import {
 } from './teacher-report-detail/teacher-report-detail.component';
 import { IQualificationBySchool } from './teachers-qualification-by-school/teachers-qualification-by-school.component';
 import { ISubJectDistribution } from './subject-distribution/subject-distribution.component';
+import { IAssessmentSummary } from './teacher-modal-view/teacher-modal-view.component';
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
 const BASE_URL = 'http://159.89.90.214:8000';
@@ -84,11 +85,119 @@ export class TeachersService {
               rightThumb: item['rightthumb'],
               rightThumbTemplate: item['rightthumbtemplate'],
               localid: item['localid'],
+              id: item['id'],
             });
           });
-          console.log(response);
+          // console.log(response);
           return teachers;
         }),
+        catchError(this.handleHttpError)
+      );
+  }
+  getCoachingReportByState(
+    state?: string,
+    lga?: string,
+    startDate?: string,
+    endDate?: string,
+    school?: string
+  ) {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get(
+        `${BASE_URL}/api/v1/coaching-mentoring/get-report-by-state?state=${state}&lga=${lga}&startDate=${startDate}&endDate=${endDate}&school=${school}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: user.accessToken,
+          }),
+        }
+      )
+      .pipe(
+        map((response) => response['data']),
+        catchError(this.handleHttpError)
+      );
+  }
+  getCoachingReportByStateDrillDownCategory(
+    category?: string,
+    state?: string,
+    lga?: string,
+    startDate?: string,
+    endDate?: string,
+    school?: string
+  ) {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get(
+        `${BASE_URL}/api/v1/coaching-mentoring/get-report-by-state-drilldow-by-category?category=${category}&state=${state}&lga=${lga}&startDate=${startDate}&endDate=${endDate}&school=${school}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: user.accessToken,
+          }),
+        }
+      )
+      .pipe(
+        map((response) => ({
+          data: response['data'].sort((item1: any, item2: any) => {
+            if (new Date(item1.date) > new Date(item2.date)) {
+              return -1;
+            } else if (new Date(item1.date) < new Date(item2.date)) {
+              return 1;
+            }
+            return 0;
+          }),
+          totalRecord: 1000,
+        })),
+        catchError(this.handleHttpError)
+      );
+  }
+  getCoachingAssessmentByID(id: number): Observable<any> {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http
+      .get(`${BASE_URL}/api/v1/coaching-mentoring/${id}`, {
+        headers: new HttpHeaders({
+          Authorization: user.accessToken,
+        }),
+      })
+      .pipe(
+        map((response) => response['data']),
+        catchError(this.handleHttpError)
+      );
+  }
+  getCoachingSummaryByTeacherID(
+    id: number,
+    start = 0,
+    count = 1000
+  ): Observable<{ data: IAssessmentSummary[]; totalRecord: number }> {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+
+    return this.http
+      .get(
+        `${BASE_URL}/api/v1/coaching-mentoring/teacher/${id}?start=${start}&count=${count}`,
+        {
+          headers: new HttpHeaders({
+            Authorization: user.accessToken,
+          }),
+        }
+      )
+      .pipe(
+        map((response) => ({
+          data: response['data'].sort((item1: any, item2: any) => {
+            if (new Date(item1.date) > new Date(item2.date)) {
+              return -1;
+            } else if (new Date(item1.date) < new Date(item2.date)) {
+              return 1;
+            }
+            return 0;
+          }),
+          totalRecord: response['totalRecord'],
+        })),
         catchError(this.handleHttpError)
       );
   }

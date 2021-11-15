@@ -176,6 +176,31 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="kt-widget14__chart" style="height: 150px">
+                <canvas #chart></canvas>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6">
+                <div>
+                  <h5 class="">Total Female</h5>
+                  <h1 style="color: #f29cb3" class="text-center">
+                    {{ totalFemale }}
+                  </h1>
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <div class="">
+                  <div>
+                    <h5 class="">Total Male</h5>
+                    <h1 style="color: #79c6f1" class="text-center">
+                      {{ totalMale }}
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </ng-container>
       </kt-portlet-body>
@@ -347,7 +372,7 @@
                     aria-label="Example icon button with a home icon"
                     (click)="onRowElementClick($event, element)"
                   >
-                    <mat-icon>more_vert</mat-icon>
+                    <mat-icon>visibility</mat-icon>
                   </button>
                 </mat-cell>
               </ng-container>

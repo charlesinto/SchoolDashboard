@@ -24,6 +24,9 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { UploadTeacherComponent } from './uploadteachers/upload-teacher-component';
+import { TeacherModalViewComponent } from './teacher-modal-view/teacher-modal-view.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 const $ = window['$'];
 
@@ -69,8 +72,73 @@ export class TeachersComponent implements OnInit, AfterViewInit {
   state_access: string;
   totalMale = 0;
   totalFemale = 0;
-  @Input() data: { labels: string[]; datasets: any[] };
+  @Input() data: { labels: string[]; datasets: any[] } = {
+    labels: ['Male', 'Female'],
+    datasets: [
+      {
+        label: 'Male',
+        borderColor: this.layoutConfigService.getConfig('colors.state.brand'),
+        fill: false,
+        borderWidth: 2,
+        backgroundColor: Chart.helpers
+          .color(this.layoutConfigService.getConfig('colors.state.brand'))
+          .alpha(0.6)
+          .rgbString(),
+        // borderColor: this.color(
+        //   this.layoutConfigService.getConfig('colors.state.brand')
+        // )
+        //   .alpha(0)
+        //   .rgbString(),
+
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 12,
+        pointBackgroundColor: Chart.helpers
+          .color('#000000')
+          .alpha(0)
+          .rgbString(),
+        pointBorderColor: Chart.helpers.color('#000000').alpha(0).rgbString(),
+        pointHoverBackgroundColor:
+          this.layoutConfigService.getConfig('colors.state.brand'),
+        pointHoverBorderColor: Chart.helpers
+          .color('#000000')
+          .alpha(0.1)
+          .rgbString(),
+
+        data: [0, 0, 0, 0, 0],
+      },
+
+      {
+        label: 'Female',
+        fill: false,
+        borderWidth: 2,
+        backgroundColor: Chart.helpers
+          .color(this.layoutConfigService.getConfig('colors.state.brand'))
+          .alpha(0.2)
+          .rgbString(),
+        borderColor: this.layoutConfigService.getConfig('colors.state.danger'),
+
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 12,
+        pointBackgroundColor: Chart.helpers
+          .color('#000000')
+          .alpha(0)
+          .rgbString(),
+        pointBorderColor: Chart.helpers.color('#000000').alpha(0).rgbString(),
+        pointHoverBackgroundColor:
+          this.layoutConfigService.getConfig('colors.state.brand'),
+        pointHoverBorderColor: Chart.helpers
+          .color('#000000')
+          .alpha(0.1)
+          .rgbString(),
+
+        data: [0, 0],
+      },
+    ],
+  };
   @ViewChild('chart', { static: true }) chart: ElementRef;
+  color = Chart.helpers.color;
+
+  chartUI;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   constructor(
@@ -79,7 +147,10 @@ export class TeachersComponent implements OnInit, AfterViewInit {
     private schoolService: SchoolsService,
     private appService: AppServiceService,
     private layoutConfigService: LayoutConfigService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private location: Location,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -92,6 +163,9 @@ export class TeachersComponent implements OnInit, AfterViewInit {
       this.statesSelected.setValue([this.state_access]);
       this.statesSelected.disable();
     }
+    this.route.params.subscribe((params) => {
+      console.log('params: ', params);
+    });
   }
 
   openDialog(htmlStr: any, file: any) {
@@ -115,7 +189,7 @@ export class TeachersComponent implements OnInit, AfterViewInit {
     // For more information about the chartjs, visit this link
     // https://www.chartjs.org/docs/latest/getting-started/usage.html
 
-    const chart = new Chart(this.chart.nativeElement, {
+    this.chartUI = new Chart(this.chart.nativeElement, {
       type: 'bar',
       data: this.data,
       options: {
@@ -214,26 +288,76 @@ export class TeachersComponent implements OnInit, AfterViewInit {
         this.ELEMENT_DATA = data;
         this.teacherDatabase = data;
         this.data = {
-          labels: ['Male', 'Female'],
+          labels: ['Female', 'Male'],
           datasets: [
             {
-              // label: 'dataset 1',
-              backgroundColor: this.layoutConfigService.getConfig(
-                'colors.state.success'
-              ),
-              data: [this.totalMale, this.totalFemale],
+              fill: true,
+              // borderWidth: 0,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+              ],
+              borderColor: this.color(
+                this.layoutConfigService.getConfig('colors.state.brand')
+              )
+                .alpha(0)
+                .rgbString(),
+
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 12,
+              pointBackgroundColor: Chart.helpers
+                .color('#000000')
+                .alpha(0)
+                .rgbString(),
+              pointBorderColor: Chart.helpers
+                .color('#000000')
+                .alpha(0)
+                .rgbString(),
+              pointHoverBackgroundColor:
+                this.layoutConfigService.getConfig('colors.state.brand'),
+              pointHoverBorderColor: Chart.helpers
+                .color('#000000')
+                .alpha(0.1)
+                .rgbString(),
+
+              data: [this.totalFemale, this.totalMale],
             },
           ],
         };
 
         this.initChartJS();
         this.changeDetectRef.detectChanges();
+        this.listenForRouteChange();
       },
       (error) => {
         this.loading = false;
         console.log(error);
       }
     );
+  }
+  listenForRouteChange() {
+    this.route.params.subscribe((param) => {
+      const teacher = this.teacherDatabase.find(
+        (item) => item.id === parseInt(param.id)
+      );
+
+      if (teacher) {
+        const dialogRef = this.dialog.open(TeacherModalViewComponent, {
+          maxWidth: '90vw',
+          minWidth: '60vw',
+          data: {
+            teacher,
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((data) => {
+          if (data) {
+            this.location.back();
+          }
+        });
+      } else {
+      }
+    });
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -286,10 +410,7 @@ export class TeachersComponent implements OnInit, AfterViewInit {
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
   onRowElementClick(event: any, element: Teacher) {
-    console.log(element);
-    this.selection.clear();
-    this.school = element;
-    this.editMode = true;
+    console.log('element: ', element);
   }
   closeDetailPage() {
     this.selection.clear();
@@ -315,12 +436,6 @@ export class TeachersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getUserAccessibleState() {
-    this.states = this.appService.getStates(
-      this.appService.getUserStateAccess()
-    );
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -328,6 +443,11 @@ export class TeachersComponent implements OnInit, AfterViewInit {
 
   getUserAccessibleLocals(states = []) {
     this.localgovernments = this.appService.getLocalGovernments(states);
+  }
+  getUserAccessibleState() {
+    this.states = this.appService.getStates(
+      this.appService.getUserStateAccess()
+    );
   }
 
   onlgaSelectionChange(event) {
@@ -415,20 +535,148 @@ export class TeachersComponent implements OnInit, AfterViewInit {
         this.totalFemale += 1;
       }
     });
-    this.data = {
-      labels: ['Male', 'Female'],
+
+    this.chartUI.data = {
+      labels: ['Female', 'Male'],
       datasets: [
         {
-          // label: 'dataset 1',
-          backgroundColor: this.layoutConfigService.getConfig(
-            'colors.state.success'
-          ),
+          fill: true,
+          // borderWidth: 0,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+          ],
+          borderColor: this.color(
+            this.layoutConfigService.getConfig('colors.state.brand')
+          )
+            .alpha(0)
+            .rgbString(),
+
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 12,
+          pointBackgroundColor: Chart.helpers
+            .color('#000000')
+            .alpha(0)
+            .rgbString(),
+          pointBorderColor: Chart.helpers.color('#000000').alpha(0).rgbString(),
+          pointHoverBackgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
+          pointHoverBorderColor: Chart.helpers
+            .color('#000000')
+            .alpha(0.1)
+            .rgbString(),
+
           data: [this.totalMale, this.totalFemale],
         },
       ],
     };
 
-    this.initChartJS();
+    this.chartUI.update();
+  }
+  private initChart() {
+    // For more information about the chartjs, visit this link
+    // https://www.chartjs.org/docs/latest/getting-started/usage.html
+
+    this.chartUI = new Chart(this.chart.nativeElement, {
+      type: 'bar',
+      data: this.data,
+
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        // legend: false,
+        scales: {
+          xAxes: [
+            {
+              categoryPercentage: 0.35,
+              barPercentage: 0.7,
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: 'Month',
+              },
+              gridLines: false,
+              ticks: {
+                display: true,
+                beginAtZero: true,
+                fontColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.3'
+                ),
+                fontSize: 13,
+                padding: 10,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              categoryPercentage: 0.35,
+              barPercentage: 0.7,
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: 'Value',
+              },
+              gridLines: {
+                color: this.layoutConfigService.getConfig(
+                  'colors.base.shape.2'
+                ),
+                drawBorder: false,
+                offsetGridLines: false,
+                drawTicks: false,
+                borderDash: [3, 4],
+                zeroLineWidth: 1,
+                zeroLineColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.2'
+                ),
+                zeroLineBorderDash: [3, 4],
+              },
+              ticks: {
+                max: 70,
+                stepSize: 10,
+                display: true,
+                beginAtZero: true,
+                fontColor: this.layoutConfigService.getConfig(
+                  'colors.base.shape.3'
+                ),
+                fontSize: 13,
+                padding: 10,
+              },
+            },
+          ],
+        },
+        title: {
+          display: false,
+        },
+        hover: {
+          mode: 'index',
+        },
+        tooltips: {
+          enabled: true,
+          intersect: false,
+          mode: 'nearest',
+          bodySpacing: 5,
+          yPadding: 10,
+          xPadding: 10,
+          caretPadding: 0,
+          displayColors: false,
+          backgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
+          titleFontColor: '#ffffff',
+          cornerRadius: 4,
+          footerSpacing: 0,
+          titleSpacing: 0,
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 5,
+            bottom: 5,
+          },
+        },
+      },
+    });
   }
 }
 
@@ -473,7 +721,7 @@ export interface Teacher {
   dateOfBirth: Date;
   profile_url: string;
   leftThumb: string;
-
+  id?: number;
   leftThumbTemplate: string;
   rightThumb: string;
   rightThumbTemplate: string;

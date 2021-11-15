@@ -1,5 +1,12 @@
 // Angular
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Lodash
@@ -112,7 +119,8 @@ export class DashboardComponent implements OnInit {
     private layoutConfigService: LayoutConfigService,
     private dashboardService: DashboardService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changeDetectRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -507,10 +515,12 @@ export class DashboardComponent implements OnInit {
         this.totalStudents = data.studentCount;
         this.totalTeachers = data.teacherCount;
         this.enumerators = data.enumerators;
+        this.changeDetectRef.detectChanges();
       },
       (error) => {
         console.log('344o: ', error);
         this.loading = false;
+        this.changeDetectRef.detectChanges();
         console.log(error);
       }
     );

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { User } from '../_models/user.model';
 import { Permission } from '../_models/permission.model';
 import { Role } from '../_models/role.model';
@@ -90,6 +94,24 @@ export class AuthService {
       );
   }
 
+  public createUser(payload: any) {
+    return this.http
+      .post(BASE_URL + '/api/v1/auth/create-user', payload)
+      .pipe(catchError(this.handleHttpError));
+  }
+  handleHttpError(error: HttpErrorResponse) {
+    if (error.error instanceof Error) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      console.error(
+        `Backend returned code ${error.status}, body was: ${error.error}`
+      );
+      console.error(error.error);
+    }
+    return throwError(error);
+  }
+
   /*
    * Submit forgot password request
    *
@@ -124,11 +146,11 @@ export class AuthService {
   }
 
   // CREATE =>  POST: add a new user to the server
-  createUser(user: User): Observable<User> {
-    const httpHeaders = new HttpHeaders();
-    httpHeaders.set('Content-Type', 'application/json');
-    return this.http.post<User>(API_USERS_URL, user, { headers: httpHeaders });
-  }
+  // createUser(user: User): Observable<User> {
+  //   const httpHeaders = new HttpHeaders();
+  //   httpHeaders.set('Content-Type', 'application/json');
+  //   return this.http.post<User>(API_USERS_URL, user, { headers: httpHeaders });
+  // }
 
   // Method from server should return QueryResultsModel(items: any[], totalsCount: number)
   // items => filtered/sorted result

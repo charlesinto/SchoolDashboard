@@ -8,7 +8,7 @@ import {
 import { catchError, map } from 'rxjs/operators';
 import { User } from '../../../core/auth/_models/user.model';
 import { environment } from 'environments/environment';
-import { Student } from './students.component';
+import { Student, StudentInfo } from './students.component';
 import { IStudentGenderReport } from './students-by-gender/students-by-gender.component';
 import {
   IStudentAttendanceReport,
@@ -36,7 +36,7 @@ export class StudentsService {
     private appService: AppServiceService
   ) {}
 
-  getStudents(): Observable<Student[]> {
+  getStudents(): Observable<StudentInfo> {
     const user: User = JSON.parse(
       localStorage.getItem(environment.authTokenKey)
     );
@@ -62,7 +62,7 @@ export class StudentsService {
               school: item['school'],
               otherNames: item['othernames'],
               surname: item['surname'],
-
+              id: item['id'],
               town: item['town'],
               gender: item['gender'],
               riskLevel: item['riskLevel'],
@@ -104,7 +104,7 @@ export class StudentsService {
               localid: item['localid'],
             });
           });
-          return students;
+          return { students, data_gender: response['data_gender'] };
         }),
         catchError(this.handleHttpError)
       );
@@ -196,7 +196,7 @@ export class StudentsService {
           const data: IStudentAttendanceDetail[] = [];
           dt.forEach((item) => {
             data.push({
-              fullName: `${item.othernames} ${item.surname}`,
+              fullName: `${item.surname} ${item.othernames} `,
               female: item.gender.toLowerCase() === 'female',
               male: item.gender.toLowerCase() === 'male',
               school: item.school,

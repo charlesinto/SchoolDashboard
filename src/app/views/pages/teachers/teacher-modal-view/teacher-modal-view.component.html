@@ -1,0 +1,158 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      {{ data?.teacher?.surname }} {{ data?.teacher?.otherNames }}
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true" (click)="c('Close click')">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div *ngIf="data?.teacher?.profile_url !== null" class="row">
+        <div class="col-xl-12">
+          <div class="image-avatar-wrapper">
+            <img
+              class="image-avatar"
+              alt="profile"
+              src="{{ data?.teacher?.profile_url }}"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6">
+          <span>Surname</span>
+          <h6>{{ data?.teacher?.surname }}</h6>
+        </div>
+        <div class="col-xl-6">
+          <span>Other Names</span>
+          <h6>{{ data?.teacher?.otherNames }}</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12">
+          <span>School</span>
+          <h6>{{ data?.teacher?.schoolName }}</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12">
+          <span>Email Address</span>
+          <h6>{{ data?.teacher?.email }}</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6">
+          <span>Regsitration Number</span>
+          <h6>{{ data?.teacher?.registrationNumber }}</h6>
+        </div>
+        <div class="col-xl-6">
+          <span>Qualification</span>
+          <h6>{{ data?.teacher?.qualification }}</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6">
+          <span>Date of Birth</span>
+          <h6>{{ data?.teacher?.dateOfBirth | date: "mediumDate" }}</h6>
+        </div>
+        <div class="col-xl-6">
+          <span>Subject Taught</span>
+          <h6>{{ data?.teacher?.subjectTaught }}</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6">
+          <span>Contact Number</span>
+          <h6>{{ data?.teacher?.telePhoneNumber }}</h6>
+        </div>
+        <div class="col-xl-6">
+          <span>Teaching Type</span>
+          <h6>{{ data?.teacher?.teachingType }}</h6>
+        </div>
+      </div>
+      <h3 class="mt-3">Effectiveness Score Card</h3>
+      <hr />
+
+      <div class="pt-1">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Score</th>
+              <th>Effectively Met</th>
+              <th>Partially Met</th>
+              <th>Not Met</th>
+              <th>Assessment Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of assessmentSummary">
+              <td>{{ item.score }}%</td>
+              <td>
+                <mat-icon
+                  *ngIf="item.score_category === 'Effectively Met(60-75)'"
+                  class="green-icon"
+                  >check_circle_outline</mat-icon
+                >
+              </td>
+              <td>
+                <mat-icon
+                  *ngIf="item.score_category === 'Partially Met(50-70)'"
+                  class="yellow-icon"
+                  >check_circle_outline</mat-icon
+                >
+              </td>
+              <td>
+                <mat-icon
+                  *ngIf="item.score_category === 'Not Met(Below 50)'"
+                  class="red-icon"
+                  >check_circle_outline</mat-icon
+                >
+              </td>
+              <td>{{ item.date | date: "medium" }}</td>
+              <td>
+                <a
+                  (click)="c()"
+                  [routerLink]="['teachers/coaching-mentoring']"
+                  [queryParams]="{ assesmentId: item.id }"
+                  mat-stroked-button
+                  color="primary"
+                  >View More</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          *ngIf="isLoadingAssessmentRecord"
+          class="d-flex justify-content-center"
+        >
+          <mat-progress-spinner
+            class="example-margin"
+            [color]="colorSpinner"
+            [mode]="mode"
+            [value]="value"
+          >
+          </mat-progress-spinner>
+        </div>
+      </div>
+
+      <mat-paginator
+        #paginator
+        [length]="length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="pageEvent = handlePageChange($event)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+      Close
+    </button>
+  </div>
+</div>

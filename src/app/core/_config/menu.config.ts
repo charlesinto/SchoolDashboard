@@ -10,6 +10,7 @@ export class MenuConfig {
           page: '/dashboard',
           translate: 'MENU.DASHBOARD',
         },
+
         {
           title: 'Schools',
           root: true,
@@ -247,10 +248,18 @@ export class MenuConfig {
         {
           title: 'Dashboard',
           root: true,
-          icon: 'flaticon2-architecture-and-city',
+          // icon: 'flaticon2-architecture-and-city',
           page: '/dashboard',
           translate: 'MENU.DASHBOARD',
           bullet: 'dot',
+        },
+        {
+          icon: 'flaticon2-architecture-and-city',
+          title: 'User Management',
+          root: true,
+          page: '/users',
+          bullet: 'dot',
+          // translate: 'MENU.DASHBOARD',
         },
         {
           title: 'Schools',
@@ -270,12 +279,7 @@ export class MenuConfig {
           icon: 'flaticon2-expand',
           page: '/students',
         },
-        // {
-        //   title: 'Layout Builder',
-        //   root: true,
-        //   icon: 'flaticon2-expand',
-        //   page: '/builder',
-        // },
+
         { section: 'Reports' },
         {
           title: 'School',
@@ -291,10 +295,6 @@ export class MenuConfig {
               title: 'School Distribution by LGA',
               page: '/schools/schools-by-lga',
             },
-            // {
-            //   title: 'School Distribution by Gender',
-            //   page: '/schools/schools-by-gender',
-            // },
           ],
         },
         {
@@ -303,105 +303,31 @@ export class MenuConfig {
           bullet: 'dot',
           icon: 'flaticon2-digital-marketing',
           submenu: [
-            // {
-            //   title: 'Teacher Distribution by State',
-            //   page: '/ngbootstrap/accordion',
-            // },
-            // {
-            //   title: 'Teacher Distribution by LGA',
-            //   page: '/ngbootstrap/accordion',
-            // },
-            // {
-            //   title: 'Teacher Distribution by School',
-            //   page: '/ngbootstrap/accordion',
-            // },
-            // {
-            //   title: 'Teacher Distribution by Gender',
-            //   page: '/ngbootstrap/accordion',
-            // },
             {
               title: 'Teachers Qualification',
               page: '/teachers/teachers-by-qualification',
             },
             {
-              title: 'Teachers Qualification By School',
+              title: 'Qualification By School',
               page: '/teachers/teachers-qualification-by-schoool',
             },
             {
               title: 'Subject Distribution',
               page: '/teachers/teachers-distribution-by-subject',
             },
-            // {
-            //   title: 'Teachers Distribution by Subject',
-            //   page: '/teachers/teachers-distribution-by-subject',
-            // },
+            {
+              title: 'Effectiveness Report',
+
+              bullet: 'dot',
+
+              submenu: [
+                {
+                  title: 'State Report',
+                  page: '/teachers/effectiveness-report-by-state',
+                },
+              ],
+            },
           ],
-          // submenu: [
-          //   {
-          //     title: 'Accordion',
-          //     page: '/ngbootstrap/accordion',
-          //   },
-          //   {
-          //     title: 'Alert',
-          //     page: '/ngbootstrap/alert',
-          //   },
-          //   {
-          //     title: 'Buttons',
-          //     page: '/ngbootstrap/buttons',
-          //   },
-          //   {
-          //     title: 'Carousel',
-          //     page: '/ngbootstrap/carousel',
-          //   },
-          //   {
-          //     title: 'Collapse',
-          //     page: '/ngbootstrap/collapse',
-          //   },
-          //   {
-          //     title: 'Datepicker',
-          //     page: '/ngbootstrap/datepicker',
-          //   },
-          //   {
-          //     title: 'Dropdown',
-          //     page: '/ngbootstrap/dropdown',
-          //   },
-          //   {
-          //     title: 'Modal',
-          //     page: '/ngbootstrap/modal',
-          //   },
-          //   {
-          //     title: 'Pagination',
-          //     page: '/ngbootstrap/pagination',
-          //   },
-          //   {
-          //     title: 'Popover',
-          //     page: '/ngbootstrap/popover',
-          //   },
-          //   {
-          //     title: 'Progressbar',
-          //     page: '/ngbootstrap/progressbar',
-          //   },
-          //   {
-          //     title: 'Rating',
-          //     page: '/ngbootstrap/rating',
-          //   },
-          //   {
-          //     title: 'Tabs',
-          //     page: '/ngbootstrap/tabs',
-          //   },
-          //   {
-          //     title: 'Timepicker',
-          //     page: '/ngbootstrap/timepicker',
-          //   },
-          //   {
-          //     title: 'Tooltips',
-          //     page: '/ngbootstrap/tooltip',
-          //   },
-          //   {
-          //     title: 'Typehead',
-          //     page: '/ngbootstrap/typehead',
-          //   },
-          // ],
         },
         {
           title: 'Student',
@@ -409,89 +335,15 @@ export class MenuConfig {
           bullet: 'dot',
           icon: 'flaticon2-digital-marketing',
           submenu: [
-            // {
-            //   title: 'Student Distribution by State',
-            //   page: '/ngbootstrap/accordion',
-            // },
-            // {
-            //   title: 'Student Distribution by LGA',
-            //   page: '/ngbootstrap/accordion',
-            // },
-            // {
-            //   title: 'Student Distribution by School',
-            //   page: '/ngbootstrap/accordion',
-            // },
             {
               title: 'Distribution by Gender, Class and School',
               page: '/students/students-by-gender',
             },
+            {
+              title: 'Dropout Risk Analysis',
+              page: '/students/dropout-risk-analysis',
+            },
           ],
-          // submenu: [
-          //   {
-          //     title: 'Accordion',
-          //     page: '/ngbootstrap/accordion',
-          //   },
-          //   {
-          //     title: 'Alert',
-          //     page: '/ngbootstrap/alert',
-          //   },
-          //   {
-          //     title: 'Buttons',
-          //     page: '/ngbootstrap/buttons',
-          //   },
-          //   {
-          //     title: 'Carousel',
-          //     page: '/ngbootstrap/carousel',
-          //   },
-          //   {
-          //     title: 'Collapse',
-          //     page: '/ngbootstrap/collapse',
-          //   },
-          //   {
-          //     title: 'Datepicker',
-          //     page: '/ngbootstrap/datepicker',
-          //   },
-          //   {
-          //     title: 'Dropdown',
-          //     page: '/ngbootstrap/dropdown',
-          //   },
-          //   {
-          //     title: 'Modal',
-          //     page: '/ngbootstrap/modal',
-          //   },
-          //   {
-          //     title: 'Pagination',
-          //     page: '/ngbootstrap/pagination',
-          //   },
-          //   {
-          //     title: 'Popover',
-          //     page: '/ngbootstrap/popover',
-          //   },
-          //   {
-          //     title: 'Progressbar',
-          //     page: '/ngbootstrap/progressbar',
-          //   },
-          //   {
-          //     title: 'Rating',
-          //     page: '/ngbootstrap/rating',
-          //   },
-          //   {
-          //     title: 'Tabs',
-          //     page: '/ngbootstrap/tabs',
-          //   },
-          //   {
-          //     title: 'Timepicker',
-          //     page: '/ngbootstrap/timepicker',
-          //   },
-          //   {
-          //     title: 'Tooltips',
-          //     page: '/ngbootstrap/tooltip',
-          //   },
-          //   {
-          //     title: 'Typehead',
-          //     page: '/ngbootstrap/typehead',
-          //   },
-          // ],
         },
         { section: 'Attendance' },
         {

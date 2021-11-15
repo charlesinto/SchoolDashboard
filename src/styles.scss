@@ -87,3 +87,30 @@
 .map-wrapper {
   height: 400px;
 }
+
+.cdk-overlay-pane {
+  overflow: scroll !important;
+}
+
+.kt-aside-dark .kt-aside-menu {
+  padding-bottom: 80px !important;
+}
+
+.kt-aside-dark
+  .kt-aside-menu
+  .kt-menu__nav
+  > .kt-menu__item.kt-menu__item--active
+  > .kt-menu__heading,
+.kt-aside-dark
+  .kt-aside-menu
+  .kt-menu__nav
+  > .kt-menu__item.kt-menu__item--active
+  > .kt-menu__link {
+  background-color: #5867dd !important;
+}
+
+.swal2-icon {
+  position: relative;
+  top: 0;
+  left: calc(50% - 50px);
+}

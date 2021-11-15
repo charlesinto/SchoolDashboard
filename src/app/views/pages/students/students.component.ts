@@ -4,6 +4,8 @@ import {
   ViewChild,
   ChangeDetectorRef,
   AfterViewInit,
+  ElementRef,
+  Input,
 } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -21,6 +23,10 @@ import {
 import { AppServiceService } from '../../services/app-service/app-service.service';
 import { SchoolsService } from '../schools/schools.service';
 import { UploadStudentComponent } from './uploadstudents/upload-teacher-component';
+import { LayoutConfigService } from 'app/core/_base/layout';
+import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 const $ = window['$'];
 
@@ -56,6 +62,8 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   lgaSelected = new FormControl('', Validators.compose([]));
   schoolSelected = new FormControl('', Validators.compose([]));
   riskLevel = new FormControl('', Validators.compose([]));
+  totalFemale = 0;
+  totalMale = 0;
 
   schools: School[] = [];
 
@@ -66,6 +74,9 @@ export class StudentsComponent implements OnInit, AfterViewInit {
   schoolDataBase: School[] = [];
 
   studentDataBase: Student[] = [];
+  @Input() data: { labels: string[]; datasets: any[] };
+  @ViewChild('chart', { static: true }) chart: ElementRef;
+  color = Chart.helpers.color;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   constructor(
@@ -73,19 +84,51 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     private studentService: StudentsService,
     private appService: AppServiceService,
     private schoolService: SchoolsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private layoutConfigService: LayoutConfigService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
-  ngOnInit() {
-    this.getStudents();
-    this.getSchools();
-    this.getUserAccessibleLocals();
-    this.getUserAccessibleState();
-    this.state_access = this.appService.getUserStateAccess();
-    if (this.state_access.toLowerCase() !== 'all') {
-      this.statesSelected.setValue([this.state_access]);
-      this.statesSelected.disable();
+  async ngOnInit() {
+    try {
+      this.getStudents();
+      this.getSchools();
+      this.getUserAccessibleLocals();
+      this.getUserAccessibleState();
+      this.state_access = this.appService.getUserStateAccess();
+      if (this.state_access.toLowerCase() !== 'all') {
+        this.statesSelected.setValue([this.state_access]);
+        this.statesSelected.disable();
+      }
+    } catch (error) {
+      console.log(error);
     }
+  }
+  listenForRouteChange() {
+    this.route.params.subscribe((param) => {
+      const index = this.dataSource.data.findIndex(
+        (item) => item.id == parseInt(param.id)
+      );
+
+      if (index !== -1) {
+        const student = this.dataSource.data[index];
+
+        const dialogRef = this.dialog.open(StudentDetailComponent, {
+          maxWidth: '90vw',
+          minWidth: '60vw',
+          data: {
+            student,
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((data) => {
+          this.location.back();
+        });
+      } else {
+      }
+    });
   }
 
   ExportTOExcel() {
@@ -129,25 +172,130 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  initChartJS() {
+    // For more information about the chartjs, visit this link
+    // https://www.chartjs.org/docs/latest/getting-started/usage.html
+
+    const chart = new Chart(this.chart.nativeElement, {
+      type: 'bar',
+      data: this.data,
+      options: {
+        title: {
+          display: false,
+        },
+        tooltips: {
+          intersect: false,
+          mode: 'nearest',
+          xPadding: 10,
+          yPadding: 10,
+          caretPadding: 10,
+        },
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        barRadius: 4,
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              gridLines: true,
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              display: true,
+              stacked: true,
+              gridLines: true,
+            },
+          ],
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          },
+        },
+      },
+    });
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   getStudents() {
     this.loading = true;
+
     this.studentService.getStudents().subscribe(
       (data) => {
-        data[0].riskLevel = 'HIGH';
-        data[1].riskLevel = 'MODERATE';
+        data.students[0].riskLevel = 'HIGH';
+        data.students[1].riskLevel = 'MODERATE';
         this.loading = false;
-        this.dataSource.data = data;
-        this.ELEMENT_DATA = data;
-        this.studentDataBase = data;
-        this.totalCount = data.length;
+        this.dataSource.data = data.students;
+        this.ELEMENT_DATA = data.students;
+        this.studentDataBase = data.students;
+        this.totalCount = 0;
+        this.totalFemale = 0;
+        this.totalMale = 0;
+
+        data.data_gender.forEach((item) => {
+          if (item.gender.toLowerCase().trim() === 'male') {
+            this.totalMale = parseInt(item.count);
+          } else {
+            this.totalFemale = parseInt(item.count);
+          }
+        });
+        this.totalCount = this.totalFemale + this.totalFemale;
+
+        this.data = {
+          labels: ['Female', 'Male'],
+          datasets: [
+            {
+              fill: true,
+              // borderWidth: 0,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+              ],
+              borderColor: this.color(
+                this.layoutConfigService.getConfig('colors.state.brand')
+              )
+                .alpha(0)
+                .rgbString(),
+
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 12,
+              pointBackgroundColor: Chart.helpers
+                .color('#000000')
+                .alpha(0)
+                .rgbString(),
+              pointBorderColor: Chart.helpers
+                .color('#000000')
+                .alpha(0)
+                .rgbString(),
+              pointHoverBackgroundColor:
+                this.layoutConfigService.getConfig('colors.state.brand'),
+              pointHoverBorderColor: Chart.helpers
+                .color('#000000')
+                .alpha(0.1)
+                .rgbString(),
+
+              data: [this.totalFemale, this.totalMale],
+            },
+          ],
+        };
+        this.initChartJS();
         this.changeDetectRef.detectChanges();
+
+        this.listenForRouteChange();
       },
       (error) => {
         this.loading = false;
+        console.error(error);
       }
     );
   }
@@ -217,7 +365,8 @@ export class StudentsComponent implements OnInit, AfterViewInit {
     console.log(element);
     this.selection.clear();
     this.school = element;
-    this.editMode = true;
+    // this.editMode = true;
+    this.router.navigateByUrl(`/students/${element.id}`);
   }
   closeDetailPage() {
     this.selection.clear();
@@ -317,10 +466,10 @@ export class StudentsComponent implements OnInit, AfterViewInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       console.log('result is: ', result);
       if (result) {
-        this.getStudents();
+        await this.getStudents();
       }
     });
   }
@@ -402,7 +551,13 @@ export interface Student {
   leftRET: Number;
   leftFingerPrintId: string;
   rightRET: number;
+  id?: number;
   rightFingerPrintId: string;
   localid?: number;
   riskLevel?: 'HIGH' | 'MODERATE' | 'NIL';
+}
+
+export interface StudentInfo {
+  data_gender: any[];
+  students: Student[];
 }

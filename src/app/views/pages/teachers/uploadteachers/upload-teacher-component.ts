@@ -18,6 +18,7 @@ import {
   IState,
 } from '../../../services/app-service/app-service.service';
 import { FormControl, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 const $ = window['$'];
 
@@ -31,10 +32,10 @@ export class UploadTeacherComponent implements OnInit, AfterContentInit {
 
   states: IState[] = [];
   localgovernments: ILocalGovernments[] = [];
-
+  schoolNotSelected: boolean = false;
   totalCount = 0;
   schoolDataBase: School[] = [];
-  loading: boolean = true;
+  loading: boolean = false;
   statesSelected = new FormControl('', Validators.compose([]));
   lgaSelected = new FormControl('', Validators.compose([]));
   schoolSelected = new FormControl('', Validators.compose([]));
@@ -119,4 +120,70 @@ export class UploadTeacherComponent implements OnInit, AfterContentInit {
     this.dialogRef.close();
   }
   filterData() {}
+
+  async uploadTeachers() {
+    try {
+      this.schoolNotSelected = false;
+      if (this.data.file === null) {
+        return;
+      }
+      if (this.schoolSelected.value.trim() === '') {
+        this.schoolNotSelected = true;
+      }
+      console.log(this.data);
+
+      const jsonData = await this.convertFileToJSON(this.data.file);
+      console.log('jsondata: ', jsonData);
+
+      return;
+
+      const index = this.schoolDataBase.findIndex(
+        (item) =>
+          item.schoolName.toLowerCase().trim() ===
+          this.schoolSelected.value.trim().toLowerCase()
+      );
+      if (index !== -1) {
+        const school = this.schoolDataBase[index];
+        this.loading = true;
+        // this.studentService
+        //   .handleBulkUpload({ schoolId: school.id, students: jsonData })
+        //   .subscribe(
+        //     (data) => {
+        //       this.loading = false;
+        //       console.log(data);
+        //       $('.html').empty();
+        //       this.actionSuccessful = true;
+        //       this.data.file = null;
+        //     },
+        //     (error) => {
+        //       this.loading = false;
+        //       console.log(error);
+        //     }
+        //   );
+      }
+    } catch (error) {
+      this.loading = false;
+    }
+  }
+
+  convertFileToJSON(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        /* read workbook */
+        const bstr: string = e.target.result;
+        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+        /* grab first sheet */
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+        /* save data */
+        const studentJSONfile = XLSX.utils.sheet_to_json(ws);
+
+        resolve(studentJSONfile);
+      };
+      reader.readAsBinaryString(file);
+    });
+  }
 }

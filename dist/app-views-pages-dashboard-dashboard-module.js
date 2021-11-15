@@ -18,7 +18,7 @@ module.exports = "<div class=\"row\">\n  <div class=\"col-xl-12\">\n    <div cla
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ":host ::ng-deep ngb-tabset > .nav-tabs {\n  display: none; }\n\n.kt-widget12__chart {\n  width: 100%;\n  max-width: 800px;\n  height: 300px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzb251b3JhaC9Eb2N1bWVudHMvY2JjL3NjaG9vbERhc2hib2FyZC9zcmMvYXBwL3ZpZXdzL3BhZ2VzL2Rhc2hib2FyZC9kYXNoYm9hcmQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFHTSxhQUFhLEVBQUE7O0FBS25CO0VBQ0UsV0FBVztFQUNYLGdCQUFnQjtFQUNoQixhQUFhLEVBQUEiLCJmaWxlIjoic3JjL2FwcC92aWV3cy9wYWdlcy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiOmhvc3Qge1xuICA6Om5nLWRlZXAge1xuICAgIG5nYi10YWJzZXQgPiAubmF2LXRhYnMge1xuICAgICAgZGlzcGxheTogbm9uZTtcbiAgICB9XG4gIH1cbn1cblxuLmt0LXdpZGdldDEyX19jaGFydCB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDgwMHB4O1xuICBoZWlnaHQ6IDMwMHB4O1xufVxuIl19 */"
+module.exports = ":host ::ng-deep ngb-tabset > .nav-tabs {\n  display: none;\n}\n\n.kt-widget12__chart {\n  width: 100%;\n  max-width: 800px;\n  height: 300px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzb251b3JhaC9Eb2N1bWVudHMvY2JjL3NjaG9vbERhc2hib2FyZC9zcmMvYXBwL3ZpZXdzL3BhZ2VzL2Rhc2hib2FyZC9kYXNoYm9hcmQuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL3ZpZXdzL3BhZ2VzL2Rhc2hib2FyZC9kYXNoYm9hcmQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUk7RUFDRSxhQUFBO0FDRE47O0FETUE7RUFDRSxXQUFBO0VBQ0EsZ0JBQUE7RUFDQSxhQUFBO0FDSEYiLCJmaWxlIjoic3JjL2FwcC92aWV3cy9wYWdlcy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiOmhvc3Qge1xuICA6Om5nLWRlZXAge1xuICAgIG5nYi10YWJzZXQgPiAubmF2LXRhYnMge1xuICAgICAgZGlzcGxheTogbm9uZTtcbiAgICB9XG4gIH1cbn1cblxuLmt0LXdpZGdldDEyX19jaGFydCB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDgwMHB4O1xuICBoZWlnaHQ6IDMwMHB4O1xufVxuIiwiOmhvc3QgOjpuZy1kZWVwIG5nYi10YWJzZXQgPiAubmF2LXRhYnMge1xuICBkaXNwbGF5OiBub25lO1xufVxuXG4ua3Qtd2lkZ2V0MTJfX2NoYXJ0IHtcbiAgd2lkdGg6IDEwMCU7XG4gIG1heC13aWR0aDogODAwcHg7XG4gIGhlaWdodDogMzAwcHg7XG59Il19 */"
 
 /***/ }),
 
@@ -54,11 +54,12 @@ __webpack_require__.r(__webpack_exports__);
 var $ = window['$'];
 var moment = window['moment'];
 var DashboardComponent = /** @class */ (function () {
-    function DashboardComponent(layoutConfigService, dashboardService, router, route) {
+    function DashboardComponent(layoutConfigService, dashboardService, router, route, changeDetectRef) {
         this.layoutConfigService = layoutConfigService;
         this.dashboardService = dashboardService;
         this.router = router;
         this.route = route;
+        this.changeDetectRef = changeDetectRef;
         this.loading = false;
         this.loadingAttendanceReport = false;
         this.totalSchools = '0';
@@ -483,9 +484,11 @@ var DashboardComponent = /** @class */ (function () {
             _this.totalStudents = data.studentCount;
             _this.totalTeachers = data.teacherCount;
             _this.enumerators = data.enumerators;
+            _this.changeDetectRef.detectChanges();
         }, function (error) {
             console.log('344o: ', error);
             _this.loading = false;
+            _this.changeDetectRef.detectChanges();
             console.log(error);
         });
     };
@@ -613,7 +616,8 @@ var DashboardComponent = /** @class */ (function () {
         { type: _core_base_layout__WEBPACK_IMPORTED_MODULE_5__["LayoutConfigService"] },
         { type: _dashboard_service__WEBPACK_IMPORTED_MODULE_6__["DashboardService"] },
         { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"] },
-        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] }
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
+        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
     ]; };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('chart', { static: true }),
@@ -636,7 +640,8 @@ var DashboardComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_core_base_layout__WEBPACK_IMPORTED_MODULE_5__["LayoutConfigService"],
             _dashboard_service__WEBPACK_IMPORTED_MODULE_6__["DashboardService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
     ], DashboardComponent);
     return DashboardComponent;
 }());

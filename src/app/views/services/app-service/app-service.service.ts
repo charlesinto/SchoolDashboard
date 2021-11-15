@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { state } from '@angular/animations';
 import { environment } from 'environments/environment';
+import Swal from 'sweetalert2';
 
 import { User } from '../../../core/auth/_models/user.model';
+import { BehaviorSubject } from 'rxjs';
+import { Teacher } from '../../pages/teachers/teachers.component';
 const locations: ILocation[] = [
   {
     state: {
@@ -1043,6 +1046,8 @@ const locations: ILocation[] = [
   providedIn: 'root',
 })
 export class AppServiceService {
+  teacher: BehaviorSubject<Teacher>;
+  assessment: BehaviorSubject<any>;
   constructor() {}
   getUser(): User {
     const user: User = JSON.parse(
@@ -1109,13 +1114,58 @@ export class AppServiceService {
         .map((item) => item.state);
     }
 
-    filteredStates.forEach((item) => locals.push(...item.locals));
+    filteredStates.forEach((item: any) => locals.push(item.locals));
 
     return locals.sort((item1, item2) => {
       if (item1.name.toLowerCase() > item2.name.toLowerCase()) return 1;
       return -1;
     });
   }
+  showPopAlertError(title?: string, message?: string) {
+    Swal.fire({
+      icon: 'error',
+      title: title ? title : 'Operation failed',
+      text: message
+        ? message
+        : 'Some error were encountered our technical team will get on it quickly.',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp',
+      },
+    });
+  }
+
+  showPopAlertSuccess(title?: string, message?: string) {
+    Swal.fire({
+      icon: 'success',
+      title: title ? title : 'Operation failed',
+      text: message ? message : 'Operation successful',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp',
+      },
+    });
+  }
+
+  // showPopAlertHttpError(error: any) {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Operation failed',
+  //     text: error?.error?.message
+  //       ? error?.error?.message
+  //       : 'Some errors were encountered, our technical team will resolve it shortly',
+  //     showClass: {
+  //       popup: 'animate__animated animate__fadeInDown',
+  //     },
+  //     hideClass: {
+  //       popup: 'animate__animated animate__fadeOutUp',
+  //     },
+  //   });
+  // }
 }
 
 export interface ILocation {

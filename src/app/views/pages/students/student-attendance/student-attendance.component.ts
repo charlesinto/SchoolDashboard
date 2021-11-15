@@ -80,7 +80,7 @@ export class StudentAttendanceComponent implements OnInit {
   state_access: string;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @Input() data: { labels: string[]; datasets: any[] };
+  @Input() data: { labels: string[]; datasets: any[]; options?: any };
   @Input() type: string = 'line';
   @ViewChild('chart', { static: true }) chart: ElementRef;
   color = Chart.helpers.color;
@@ -151,49 +151,14 @@ export class StudentAttendanceComponent implements OnInit {
               .color('#000000')
               .alpha(0)
               .rgbString(),
-            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-              'colors.state.brand'
-            ),
+            pointHoverBackgroundColor:
+              this.layoutConfigService.getConfig('colors.state.brand'),
             pointHoverBorderColor: Chart.helpers
               .color('#000000')
               .alpha(0.1)
               .rgbString(),
 
             data: [20, 40, 50, 25, 35, 60, 30],
-          },
-          {
-            fill: true,
-            // borderWidth: 0,
-            backgroundColor: this.color(
-              this.layoutConfigService.getConfig('colors.state.brand')
-            )
-              .alpha(0.2)
-              .rgbString(),
-            borderColor: this.color(
-              this.layoutConfigService.getConfig('colors.state.brand')
-            )
-              .alpha(0)
-              .rgbString(),
-
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 12,
-            pointBackgroundColor: Chart.helpers
-              .color('#000000')
-              .alpha(0)
-              .rgbString(),
-            pointBorderColor: Chart.helpers
-              .color('#000000')
-              .alpha(0)
-              .rgbString(),
-            pointHoverBackgroundColor: this.layoutConfigService.getConfig(
-              'colors.state.brand'
-            ),
-            pointHoverBorderColor: Chart.helpers
-              .color('#000000')
-              .alpha(0.1)
-              .rgbString(),
-
-            data: [25, 45, 55, 30, 40, 65, 35],
           },
         ],
       };
@@ -377,7 +342,7 @@ export class StudentAttendanceComponent implements OnInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        // legend: false,
+        legend: false,
         scales: {
           xAxes: [
             {
@@ -452,9 +417,8 @@ export class StudentAttendanceComponent implements OnInit {
           xPadding: 10,
           caretPadding: 0,
           displayColors: false,
-          backgroundColor: this.layoutConfigService.getConfig(
-            'colors.state.brand'
-          ),
+          backgroundColor:
+            this.layoutConfigService.getConfig('colors.state.brand'),
           titleFontColor: '#ffffff',
           cornerRadius: 4,
           footerSpacing: 0,

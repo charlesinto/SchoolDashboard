@@ -111,9 +111,16 @@ import { StudentsService } from './students.service';
 import { AppServiceService } from '../../services/app-service/app-service.service';
 import { SchoolsService } from '../schools/schools.service';
 import { UploadStudentComponent } from './uploadstudents/upload-teacher-component';
+import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { DropoutRiskAnalysisComponent } from './dropout-risk-analysis/dropout-risk-analysis.component';
 
 @NgModule({
-  declarations: [StudentsComponent, UploadStudentComponent],
+  declarations: [
+    StudentsComponent,
+    UploadStudentComponent,
+    StudentDetailComponent,
+    DropoutRiskAnalysisComponent,
+  ],
   providers: [StudentsService, AppServiceService, SchoolsService],
   imports: [
     CommonModule,
@@ -168,6 +175,6 @@ import { UploadStudentComponent } from './uploadstudents/upload-teacher-componen
     FormsModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [UploadStudentComponent],
+  entryComponents: [UploadStudentComponent, StudentDetailComponent],
 })
 export class StudentsModule {}

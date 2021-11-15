@@ -25,13 +25,10 @@
                     <mat-select
                       placeholder="State"
                       [formControl]="statesSelected"
-
                       (selectionChange)="onStateSelectionChange($event)"
                     >
                       <mat-select-trigger>
-                        {{
-                          statesSelected.value
-                        }}
+                        {{ statesSelected.value }}
                         <!-- <span
                           *ngIf="statesSelected.value?.length > 1"
                           class="example-additional-selection"
@@ -53,11 +50,10 @@
                     <mat-select
                       placeholder="Local Government Area"
                       [formControl]="lgaSelected"
-
                       (selectionChange)="onlgaSelectionChange($event)"
                     >
                       <mat-select-trigger>
-                        {{ lgaSelected.value  }}
+                        {{ lgaSelected.value }}
                         <!-- <span
                           *ngIf="lgaSelected.value?.length > 1"
                           class="example-additional-selection"
@@ -78,12 +74,9 @@
                     <mat-select
                       placeholder="School"
                       [formControl]="schoolSelected"
-
                     >
                       <mat-select-trigger>
-                        {{
-                          schoolSelected.value
-                        }}
+                        {{ schoolSelected.value }}
                         <!-- <span
                           *ngIf="schoolSelected.value?.length > 1"
                           class="example-additional-selection"
@@ -204,8 +197,6 @@
                 </div>
               </div>
             </div>
-
-
           </div>
         </ng-container>
       </kt-portlet-body>
@@ -213,7 +204,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xl-8">
+  <div class="col-xl-12">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <kt-portlet [class]="'kt-portlet--height-fluid'">
       <kt-portlet-header
@@ -307,7 +298,7 @@
       </kt-portlet-body>
     </kt-portlet>
   </div>
-  <div class="col-xl-4">
+  <!-- <div class="col-xl-4">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <kt-portlet>
       <kt-portlet-header
@@ -321,7 +312,7 @@
         </ng-container>
       </kt-portlet-header>
       <kt-portlet-body [class]="'kt-portlet__body--fit'">
-        <!-- Checkbox Column -->
+        <!-- Checkbox Column
         <ng-container>
           <div class="container">
             <div class="row">
@@ -335,5 +326,5 @@
         </ng-container>
       </kt-portlet-body>
     </kt-portlet>
-  </div>
+  </div> -->
 </div>
