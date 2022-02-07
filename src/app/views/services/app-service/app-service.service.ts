@@ -1114,8 +1114,8 @@ export class AppServiceService {
         .map((item) => item.state);
     }
 
-    filteredStates.forEach((item: any) => locals.push(item.locals));
-
+    filteredStates.forEach((item: any) => locals.push(...item.locals));
+    console.log('locals: ', locals);
     return locals.sort((item1, item2) => {
       if (item1.name.toLowerCase() > item2.name.toLowerCase()) return 1;
       return -1;

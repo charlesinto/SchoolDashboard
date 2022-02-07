@@ -1046,7 +1046,7 @@ module.exports = "<!-- begin:: Page -->\n<ng-container *ngIf=\"selfLayout !== 'b
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- begin:: Brand -->\n<div\n  class=\"kt-aside__brand kt-grid__item\"\n  [ngClass]=\"htmlClassService.getClasses('brand', true)\"\n  id=\"kt_aside_brand\"\n>\n  <div class=\"kt-aside__brand-logo\">\n    <a href=\"javascript:;\" routerLink=\"/\">\n      <!-- <img alt=\"logo\" [attr.src]=\"headerLogo\"/> -->\n      <img\n        alt=\"logo\"\n        src=\"./assets/oyostate.jpeg\"\n        style=\"width: 180px; height: 60px; object-fit: contain\"\n      />\n    </a>\n  </div>\n  <div class=\"kt-aside__brand-tools\">\n    <button\n      ktToggle\n      [options]=\"toggleOptions\"\n      class=\"kt-aside__brand-aside-toggler kt-aside__brand-aside-toggler--left\"\n      id=\"kt_aside_toggler\"\n    >\n      <span\n        [inlineSVG]=\"\n          './assets/media/icons/svg/Navigation/Angle-double-left.svg'\n        \"\n      ></span>\n      <span\n        [inlineSVG]=\"\n          './assets/media/icons/svg/Navigation/Angle-double-right.svg'\n        \"\n      ></span>\n    </button>\n  </div>\n</div>\n<!-- end:: Brand -->\n"
+module.exports = "<!-- begin:: Brand -->\n<div\n  class=\"kt-aside__brand kt-grid__item\"\n  [ngClass]=\"htmlClassService.getClasses('brand', true)\"\n  id=\"kt_aside_brand\"\n>\n  <div class=\"kt-aside__brand-logo\">\n    <a href=\"javascript:;\" routerLink=\"/\">\n      <!-- <img alt=\"logo\" [attr.src]=\"headerLogo\"/> -->\n      <img\n        alt=\"logo\"\n        src=\"https://ubec.gov.ng/wp-content/uploads/2021/08/cropped-UBEC-Logo-1.jpg\"\n        style=\"width: 180px; height: 60px; object-fit: contain\"\n      />\n    </a>\n  </div>\n  <div class=\"kt-aside__brand-tools\">\n    <button\n      ktToggle\n      [options]=\"toggleOptions\"\n      class=\"kt-aside__brand-aside-toggler kt-aside__brand-aside-toggler--left\"\n      id=\"kt_aside_toggler\"\n    >\n      <span\n        [inlineSVG]=\"\n          './assets/media/icons/svg/Navigation/Angle-double-left.svg'\n        \"\n      ></span>\n      <span\n        [inlineSVG]=\"\n          './assets/media/icons/svg/Navigation/Angle-double-right.svg'\n        \"\n      ></span>\n    </button>\n  </div>\n</div>\n<!-- end:: Brand -->\n"
 
 /***/ }),
 
@@ -7631,10 +7631,13 @@ var UserEffects = /** @class */ (function () {
         this.store = store;
         this.showPageLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersPageToggleLoading"]({ isLoading: true });
         this.hidePageLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersPageToggleLoading"]({ isLoading: false });
-        this.showActionLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersActionToggleLoading"]({ isLoading: true });
-        this.hideActionLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersActionToggleLoading"]({ isLoading: false });
-        this.loadUsersPage$ = this.actions$
-            .pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UsersPageRequested), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
+        this.showActionLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersActionToggleLoading"]({
+            isLoading: true,
+        });
+        this.hideActionLoadingDistpatcher = new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersActionToggleLoading"]({
+            isLoading: false,
+        });
+        this.loadUsersPage$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UsersPageRequested), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
             var payload = _a.payload;
             _this.store.dispatch(_this.showPageLoadingDistpatcher);
             var requestToServer = _this.auth.findUsers(payload.page);
@@ -7646,27 +7649,24 @@ var UserEffects = /** @class */ (function () {
             return new _actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UsersPageLoaded"]({
                 users: result.items,
                 totalCount: result.totalCount,
-                page: lastQuery
+                page: lastQuery,
             });
         }));
-        this.deleteUser$ = this.actions$
-            .pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserDeleted), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
+        this.deleteUser$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserDeleted), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
             var payload = _a.payload;
             _this.store.dispatch(_this.showActionLoadingDistpatcher);
             return _this.auth.deleteUser(payload.id);
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function () {
             return _this.hideActionLoadingDistpatcher;
         }));
-        this.updateUser$ = this.actions$
-            .pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserUpdated), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
+        this.updateUser$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserUpdated), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
             var payload = _a.payload;
             _this.store.dispatch(_this.showActionLoadingDistpatcher);
             return _this.auth.updateUser(payload.user);
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function () {
             return _this.hideActionLoadingDistpatcher;
         }));
-        this.createUser$ = this.actions$
-            .pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserOnServerCreated), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
+        this.createUser$ = this.actions$.pipe(Object(_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["ofType"])(_actions_user_actions__WEBPACK_IMPORTED_MODULE_7__["UserActionTypes"].UserOnServerCreated), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["mergeMap"])(function (_a) {
             var payload = _a.payload;
             _this.store.dispatch(_this.showActionLoadingDistpatcher);
             return _this.auth.createUser(payload.user).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (res) {
@@ -7699,7 +7699,9 @@ var UserEffects = /** @class */ (function () {
     ], UserEffects.prototype, "createUser$", void 0);
     UserEffects = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["Actions"], _core_auth_services__WEBPACK_IMPORTED_MODULE_6__["AuthService"], _ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngrx_effects__WEBPACK_IMPORTED_MODULE_4__["Actions"],
+            _core_auth_services__WEBPACK_IMPORTED_MODULE_6__["AuthService"],
+            _ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"]])
     ], UserEffects);
     return UserEffects;
 }());
@@ -8813,6 +8815,27 @@ var AuthService = /** @class */ (function () {
             return null;
         }));
     };
+    AuthService.prototype.createUser = function (payload) {
+        return this.http
+            .post(BASE_URL + '/api/v1/auth/create-user', payload)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleHttpError));
+    };
+    AuthService.prototype.bulkUserCreate = function (payload) {
+        return this.http
+            .post(BASE_URL + '/api/v1/auth/bulk-user-create', payload)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleHttpError));
+    };
+    AuthService.prototype.handleHttpError = function (error) {
+        if (error.error instanceof Error) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+        }
+        else {
+            console.error("Backend returned code " + error.status + ", body was: " + error.error);
+            console.error(error.error);
+        }
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["throwError"])(error);
+    };
     /*
      * Submit forgot password request
      *
@@ -8842,11 +8865,11 @@ var AuthService = /** @class */ (function () {
         return this.http.put(API_USERS_URL, _user, { headers: httpHeaders });
     };
     // CREATE =>  POST: add a new user to the server
-    AuthService.prototype.createUser = function (user) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
-        httpHeaders.set('Content-Type', 'application/json');
-        return this.http.post(API_USERS_URL, user, { headers: httpHeaders });
-    };
+    // createUser(user: User): Observable<User> {
+    //   const httpHeaders = new HttpHeaders();
+    //   httpHeaders.set('Content-Type', 'application/json');
+    //   return this.http.post<User>(API_USERS_URL, user, { headers: httpHeaders });
+    // }
     // Method from server should return QueryResultsModel(items: any[], totalsCount: number)
     // items => filtered/sorted result
     AuthService.prototype.findUsers = function (queryParams) {
@@ -26374,6 +26397,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -27476,10 +27502,39 @@ var AppServiceService = /** @class */ (function () {
                 .map(function (item) { return item.state; });
         }
         filteredStates.forEach(function (item) { return locals.push.apply(locals, item.locals); });
+        console.log('locals: ', locals);
         return locals.sort(function (item1, item2) {
             if (item1.name.toLowerCase() > item2.name.toLowerCase())
                 return 1;
             return -1;
+        });
+    };
+    AppServiceService.prototype.showPopAlertError = function (title, message) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+            icon: 'error',
+            title: title ? title : 'Operation failed',
+            text: message
+                ? message
+                : 'Some error were encountered our technical team will get on it quickly.',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown',
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp',
+            },
+        });
+    };
+    AppServiceService.prototype.showPopAlertSuccess = function (title, message) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+            icon: 'success',
+            title: title ? title : 'Operation failed',
+            text: message ? message : 'Operation successful',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown',
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp',
+            },
         });
     };
     AppServiceService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

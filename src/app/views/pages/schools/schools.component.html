@@ -40,7 +40,7 @@
                         </span>
                       </mat-select-trigger>
 
-                      <mat-option [value]="'All'">All</mat-option>
+                      <!-- <mat-option [value]="'All'">All</mat-option> -->
                       <mat-option
                         *ngFor="let topping of states"
                         [value]="topping.name"
@@ -65,7 +65,7 @@
                           (+{{ lgaSelected.value.length - 1 }} others)
                         </span>
                       </mat-select-trigger>
-                      <mat-option [value]="'All'">All</mat-option>
+                      <!-- <mat-option [value]="'All'">All</mat-option> -->
                       <mat-option
                         *ngFor="let topping of localgovernments"
                         [value]="topping.name"

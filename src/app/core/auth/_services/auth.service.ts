@@ -18,8 +18,8 @@ const API_PERMISSION_URL = 'api/permissions';
 const API_ROLES_URL = 'api/roles';
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
-// const BASE_URL = 'http://159.89.90.214:8000';
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'http://159.89.90.214:8000';
+// const BASE_URL = 'http://localhost:8000';
 const LOGIN_URL = '/api/v1/auth/login';
 
 @Injectable()
@@ -97,6 +97,11 @@ export class AuthService {
   public createUser(payload: any) {
     return this.http
       .post(BASE_URL + '/api/v1/auth/create-user', payload)
+      .pipe(catchError(this.handleHttpError));
+  }
+  public bulkUserCreate(payload: any) {
+    return this.http
+      .post(BASE_URL + '/api/v1/auth/bulk-user-create', payload)
       .pipe(catchError(this.handleHttpError));
   }
   handleHttpError(error: HttpErrorResponse) {
