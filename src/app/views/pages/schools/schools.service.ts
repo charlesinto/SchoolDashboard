@@ -22,6 +22,16 @@ const GET_SCHOOL_BY_STATE = '/api/v1/school/get-schools-by-state';
 })
 export class SchoolsService {
   constructor(private http: HttpClient) {}
+  bulkCreate(formData: FormData) {
+    const user: User = JSON.parse(
+      localStorage.getItem(environment.authTokenKey)
+    );
+    return this.http.post(`${BASE_URL}/api/v1/school/upload`, formData, {
+      headers: new HttpHeaders({
+        Authorization: user.accessToken,
+      }),
+    });
+  }
   getSchools(): Observable<School[]> {
     const user: User = JSON.parse(
       localStorage.getItem(environment.authTokenKey)
