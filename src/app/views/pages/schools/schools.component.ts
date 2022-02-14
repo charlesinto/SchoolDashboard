@@ -23,8 +23,6 @@ import * as XLSX from 'xlsx';
 type AOA = any[][];
 const $ = window['$']
 
-const $ = window['$'];
-
 @Component({
   selector: 'kt-schools',
   templateUrl: './schools.component.html',

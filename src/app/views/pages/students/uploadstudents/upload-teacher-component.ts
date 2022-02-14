@@ -105,10 +105,11 @@ export class UploadStudentComponent implements OnInit, AfterContentInit {
       );
       if (index !== -1) {
         const school = this.schoolDataBase[index];
-        this.loading = true;
         const formData = new FormData()
         formData.append('schoolId', `${school.id}`)
         formData.append('students', this.data.file)
+        this.loading = true;
+        
         this.studentService
           .handleBulkUpload(formData)
           .subscribe(
@@ -122,11 +123,19 @@ export class UploadStudentComponent implements OnInit, AfterContentInit {
             (error) => {
               this.loading = false;
               console.log(error);
+              this.appService.showPopAlertError(
+                'Operation failed',
+                error.error.message || 'Some errors were encountered'
+              );
             }
           );
       }
     } catch (error) {
       this.loading = false;
+      this.appService.showPopAlertError(
+        'Operation failed',
+        error
+      );
     }
   }
 
