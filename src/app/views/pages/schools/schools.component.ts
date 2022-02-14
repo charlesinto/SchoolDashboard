@@ -5,11 +5,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   ElementRef,
+  OnDestroy,
 } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SchoolsService } from './schools.service';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   IState,
   ILocalGovernments,
@@ -21,12 +22,14 @@ import * as XLSX from 'xlsx';
 
 type AOA = any[][];
 
+const $ = window['$'];
+
 @Component({
   selector: 'kt-schools',
   templateUrl: './schools.component.html',
   styleUrls: ['./schools.component.scss'],
 })
-export class SchoolsComponent implements OnInit, AfterViewInit {
+export class SchoolsComponent implements OnInit, AfterViewInit, OnDestroy {
   ELEMENT_DATA: School[] = [];
   displayedColumns = [
     'select',
@@ -75,6 +78,11 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
 
   state_access: string;
 
+  bulkSchoolCreateForm = new FormGroup({
+    school: new FormControl('', Validators.compose([])),
+  });
+  loadingToUpload = false;
+
   constructor(
     private schoolService: SchoolsService,
     private changeDetectRef: ChangeDetectorRef,
@@ -91,7 +99,19 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
       this.statesSelected.setValue([this.state_access]);
       this.statesSelected.disable();
     }
+    $('#customFile000').on('change', function (e) {
+      const file = $(this).prop('files');
+      $('.custom-file-label').text(file[0].name);
+    });
   }
+
+  ngOnDestroy() {
+    // $('#customFile000').re('change', function(e) {
+    //   const file = $(this).prop('files')
+    //   $('.custom-file-label').text(file[0].name)
+    // })
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -150,8 +170,8 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
         data.forEach((item) => {
           if (item.schoolCoordinate) {
             this.locations.push({
-              lat: item.schoolCoordinate.split(',')[0].trim(),
-              lng: item.schoolCoordinate.split(',')[1].trim(),
+              lat: item.schoolCoordinate.split(',')[0],
+              lng: item.schoolCoordinate.split(',')[1],
               id: item.id,
             });
           }
@@ -304,6 +324,33 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
   }
   isInfoWindowOpen(id) {
     return this.openInfoWindows.includes(id);
+  }
+  async bulkSchoolCreate() {
+    try {
+      const files = $('#customFile000').prop('files');
+
+      const formData = new FormData();
+      formData.append('schools', files[0]);
+      this.loadingToUpload = true;
+      this.schoolService.bulkCreate(formData).subscribe(
+        (data) => {
+          this.loadingToUpload = false;
+          window.location.reload();
+        },
+        (error) => {
+          this.loadingToUpload = false;
+          this.appService.showPopAlertError(
+            'Operation failed',
+            error.error.message
+          );
+        }
+      );
+    } catch (error) {
+      this.appService.showPopAlertError(
+        'Bulk Creation failed',
+        'some errors were encounred'
+      );
+    }
   }
 }
 

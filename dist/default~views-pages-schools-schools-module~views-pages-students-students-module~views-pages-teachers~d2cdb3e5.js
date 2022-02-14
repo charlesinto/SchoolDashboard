@@ -606,6 +606,14 @@ var SchoolsService = /** @class */ (function () {
     function SchoolsService(http) {
         this.http = http;
     }
+    SchoolsService.prototype.bulkCreate = function (formData) {
+        var user = JSON.parse(localStorage.getItem(environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].authTokenKey));
+        return this.http.post(BASE_URL + "/api/v1/school/upload", formData, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
+                Authorization: user.accessToken,
+            }),
+        });
+    };
     SchoolsService.prototype.getSchools = function () {
         var user = JSON.parse(localStorage.getItem(environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].authTokenKey));
         console.log('user: ', user);
