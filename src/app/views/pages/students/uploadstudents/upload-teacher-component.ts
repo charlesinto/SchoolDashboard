@@ -106,8 +106,11 @@ export class UploadStudentComponent implements OnInit, AfterContentInit {
       if (index !== -1) {
         const school = this.schoolDataBase[index];
         this.loading = true;
+        const formData = new FormData()
+        formData.append('schoolId', `${school.id}`)
+        formData.append('students', this.data.file)
         this.studentService
-          .handleBulkUpload({ schoolId: school.id, students: jsonData })
+          .handleBulkUpload(formData)
           .subscribe(
             (data) => {
               this.loading = false;

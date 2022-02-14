@@ -232,8 +232,12 @@ export class StudentsComponent implements OnInit, AfterViewInit {
 
     this.studentService.getStudents().subscribe(
       (data) => {
-        data.students[0].riskLevel = 'HIGH';
-        data.students[1].riskLevel = 'MODERATE';
+        if(data.students.length > 2){
+          data.students[0].riskLevel = 'HIGH';
+          data.students[1].riskLevel = 'MODERATE';
+        }
+        
+        
         this.loading = false;
         this.dataSource.data = data.students;
         this.ELEMENT_DATA = data.students;
@@ -249,7 +253,7 @@ export class StudentsComponent implements OnInit, AfterViewInit {
             this.totalFemale = parseInt(item.count);
           }
         });
-        this.totalCount = this.totalFemale + this.totalFemale;
+        this.totalCount = this.totalMale + this.totalFemale;
 
         this.data = {
           labels: ['Female', 'Male'],

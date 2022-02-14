@@ -20,6 +20,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 type AOA = any[][];
+const $ = window['$']
 
 @Component({
   selector: 'kt-schools',
@@ -62,6 +63,7 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
 
   statesSelected = new FormControl('', Validators.compose([]));
   lgaSelected = new FormControl('', Validators.compose([]));
+  isUploading = false;
 
   states: IState[] = [];
   localgovernments: ILocalGovernments[] = [];
@@ -91,6 +93,10 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
       this.statesSelected.setValue([this.state_access]);
       this.statesSelected.disable();
     }
+    $('#customFile').on('change', function(e) {
+      
+      $('.custom-file-label').text($(this)[0].files[0].name)
+    })
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -140,7 +146,7 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.schoolService.getSchools().subscribe(
       (data) => {
-        console.log(data);
+        
         this.ELEMENT_DATA = data;
         this.dataSource.data = this.ELEMENT_DATA;
         this.schoolDataBase = data;
@@ -148,7 +154,8 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
         this.totalCount = data.length;
         this.locations = [];
         data.forEach((item) => {
-          if (item.schoolCoordinate) {
+          if (item.schoolCoordinate && item.schoolCoordinate.split(',').length > 1) {
+            
             this.locations.push({
               lat: item.schoolCoordinate.split(',')[0].trim(),
               lng: item.schoolCoordinate.split(',')[1].trim(),
@@ -178,7 +185,7 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
   onRowElementClick(event: any, element: School) {
-    console.log(element);
+   
     this.selection.clear();
     this.school = element;
     this.lat = element.schoolCoordinate
@@ -201,16 +208,18 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.schoolDataBase;
     } else if (this.lgaSelected.value.length > 0) {
       if (!this.lgaSelected.value.includes('All')) {
+        
         this.dataSource.data = this.schoolDataBase.filter((item) =>
-          this.lgaSelected.value.includes(item.lga)
+          this.lgaSelected.value.map(item => item.toLowerCase()).includes(item.lga.toLowerCase())
         );
       } else {
-        console.log('called here now o');
+        
+        
         if (this.statesSelected.value.includes('All')) {
           this.dataSource.data = this.schoolDataBase;
         } else {
           this.dataSource.data = this.schoolDataBase.filter((item) =>
-            this.statesSelected.value.includes(item.state)
+            this.statesSelected.value.map(item => item.toLowerCase()).includes(item.state)
           );
         }
       }
@@ -234,7 +243,8 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
     this.changeDetectRef.detectChanges();
   }
   markerClicked(event, item: { id?: number; lat: string; lng: string }) {
-    console.log(event, item);
+   
+    
     this.openInfoWindows = [];
     const index = this.schoolDataBase.findIndex(
       (school) => school.id === item.id
@@ -304,6 +314,14 @@ export class SchoolsComponent implements OnInit, AfterViewInit {
   }
   isInfoWindowOpen(id) {
     return this.openInfoWindows.includes(id);
+  }
+
+  uploadSchools(e) {
+    const file = $('#customFile')[0].files[0]
+    const formData = new FormData()
+    formData.append('schools', file)
+
+    
   }
 }
 

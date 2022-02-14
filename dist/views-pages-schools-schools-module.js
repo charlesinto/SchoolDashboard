@@ -4873,7 +4873,7 @@ var SchoolsRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".school-detail {\n  padding-top: 8px;\n}\n.school-detail span {\n  margin-bottom: 8px;\n}\n.school-detail h6 {\n  font-weight: bold;\n  margin-bottom: 8px;\n}\n.map-wrapper {\n  height: 400px;\n}\n.mat-header-cell {\n  color: #000 !important;\n  font-weight: bold;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzb251b3JhaC9Eb2N1bWVudHMvY2JjL3NjaG9vbERhc2hib2FyZC9zcmMvYXBwL3ZpZXdzL3BhZ2VzL3NjaG9vbHMvc2Nob29scy5jb21wb25lbnQuc2NzcyIsInNyYy9hcHAvdmlld3MvcGFnZXMvc2Nob29scy9zY2hvb2xzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsZ0JBQUE7QUNDRjtBREFFO0VBQ0Usa0JBQUE7QUNFSjtBREFFO0VBQ0UsaUJBQUE7RUFDQSxrQkFBQTtBQ0VKO0FERUE7RUFDRSxhQUFBO0FDQ0Y7QURFQTtFQUNFLHNCQUFBO0VBQ0EsaUJBQUE7QUNDRiIsImZpbGUiOiJzcmMvYXBwL3ZpZXdzL3BhZ2VzL3NjaG9vbHMvc2Nob29scy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5zY2hvb2wtZGV0YWlsIHtcbiAgcGFkZGluZy10b3A6IDhweDtcbiAgc3BhbiB7XG4gICAgbWFyZ2luLWJvdHRvbTogOHB4O1xuICB9XG4gIGg2IHtcbiAgICBmb250LXdlaWdodDogYm9sZDtcbiAgICBtYXJnaW4tYm90dG9tOiA4cHg7XG4gIH1cbn1cblxuLm1hcC13cmFwcGVyIHtcbiAgaGVpZ2h0OiA0MDBweDtcbn1cblxuLm1hdC1oZWFkZXItY2VsbCB7XG4gIGNvbG9yOiAjMDAwICFpbXBvcnRhbnQ7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuIiwiLnNjaG9vbC1kZXRhaWwge1xuICBwYWRkaW5nLXRvcDogOHB4O1xufVxuLnNjaG9vbC1kZXRhaWwgc3BhbiB7XG4gIG1hcmdpbi1ib3R0b206IDhweDtcbn1cbi5zY2hvb2wtZGV0YWlsIGg2IHtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIG1hcmdpbi1ib3R0b206IDhweDtcbn1cblxuLm1hcC13cmFwcGVyIHtcbiAgaGVpZ2h0OiA0MDBweDtcbn1cblxuLm1hdC1oZWFkZXItY2VsbCB7XG4gIGNvbG9yOiAjMDAwICFpbXBvcnRhbnQ7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufSJdfQ== */"
+module.exports = ".school-detail {\n  padding-top: 8px; }\n  .school-detail span {\n    margin-bottom: 8px; }\n  .school-detail h6 {\n    font-weight: bold;\n    margin-bottom: 8px; }\n  .map-wrapper {\n  height: 400px; }\n  .mat-header-cell {\n  color: #000 !important;\n  font-weight: bold; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9jaGFybGVzLm9udW9yYWgvRG9jdW1lbnRzL2NiYy9TY2hvb2xEYXNoYm9hcmQvc3JjL2FwcC92aWV3cy9wYWdlcy9zY2hvb2xzL3NjaG9vbHMuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxnQkFBZ0IsRUFBQTtFQURsQjtJQUdJLGtCQUFrQixFQUFBO0VBSHRCO0lBTUksaUJBQWlCO0lBQ2pCLGtCQUFrQixFQUFBO0VBSXRCO0VBQ0UsYUFBYSxFQUFBO0VBR2Y7RUFDRSxzQkFBc0I7RUFDdEIsaUJBQWlCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC92aWV3cy9wYWdlcy9zY2hvb2xzL3NjaG9vbHMuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuc2Nob29sLWRldGFpbCB7XG4gIHBhZGRpbmctdG9wOiA4cHg7XG4gIHNwYW4ge1xuICAgIG1hcmdpbi1ib3R0b206IDhweDtcbiAgfVxuICBoNiB7XG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gICAgbWFyZ2luLWJvdHRvbTogOHB4O1xuICB9XG59XG5cbi5tYXAtd3JhcHBlciB7XG4gIGhlaWdodDogNDAwcHg7XG59XG5cbi5tYXQtaGVhZGVyLWNlbGwge1xuICBjb2xvcjogIzAwMCAhaW1wb3J0YW50O1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cbiJdfQ== */"
 
 /***/ }),
 
@@ -4995,7 +4995,6 @@ var SchoolsComponent = /** @class */ (function () {
         var _this = this;
         this.loading = true;
         this.schoolService.getSchools().subscribe(function (data) {
-            console.log(data);
             _this.ELEMENT_DATA = data;
             _this.dataSource.data = _this.ELEMENT_DATA;
             _this.schoolDataBase = data;
@@ -5003,7 +5002,7 @@ var SchoolsComponent = /** @class */ (function () {
             _this.totalCount = data.length;
             _this.locations = [];
             data.forEach(function (item) {
-                if (item.schoolCoordinate) {
+                if (item.schoolCoordinate && item.schoolCoordinate.split(',').length > 1) {
                     _this.locations.push({
                         lat: item.schoolCoordinate.split(',')[0].trim(),
                         lng: item.schoolCoordinate.split(',')[1].trim(),
@@ -5030,7 +5029,6 @@ var SchoolsComponent = /** @class */ (function () {
             : this.dataSource.data.forEach(function (row) { return _this.selection.select(row); });
     };
     SchoolsComponent.prototype.onRowElementClick = function (event, element) {
-        console.log(element);
         this.selection.clear();
         this.school = element;
         this.lat = element.schoolCoordinate
@@ -5054,17 +5052,16 @@ var SchoolsComponent = /** @class */ (function () {
         else if (this.lgaSelected.value.length > 0) {
             if (!this.lgaSelected.value.includes('All')) {
                 this.dataSource.data = this.schoolDataBase.filter(function (item) {
-                    return _this.lgaSelected.value.includes(item.lga);
+                    return _this.lgaSelected.value.map(function (item) { return item.toLowerCase(); }).includes(item.lga.toLowerCase());
                 });
             }
             else {
-                console.log('called here now o');
                 if (this.statesSelected.value.includes('All')) {
                     this.dataSource.data = this.schoolDataBase;
                 }
                 else {
                     this.dataSource.data = this.schoolDataBase.filter(function (item) {
-                        return _this.statesSelected.value.includes(item.state);
+                        return _this.statesSelected.value.map(function (item) { return item.toLowerCase(); }).includes(item.state);
                     });
                 }
             }
@@ -5089,7 +5086,6 @@ var SchoolsComponent = /** @class */ (function () {
         this.changeDetectRef.detectChanges();
     };
     SchoolsComponent.prototype.markerClicked = function (event, item) {
-        console.log(event, item);
         this.openInfoWindows = [];
         var index = this.schoolDataBase.findIndex(function (school) { return school.id === item.id; });
         this.schoolOnView = this.schoolDataBase[index];

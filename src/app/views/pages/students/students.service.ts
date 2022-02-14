@@ -23,8 +23,8 @@ import {
 import { AppServiceService } from '../../services/app-service/app-service.service';
 
 // const BASE_URL = 'https://school-census.herokuapp.com';
-const BASE_URL = 'http://159.89.90.214:8000';
-// const BASE_URL = 'http://localhost:8000';
+// const BASE_URL = 'http://159.89.90.214:8000';
+const BASE_URL = 'http://localhost:8000';
 const GET_ALL_STUDENTS = '/api/v1/student/get-students';
 
 @Injectable({
@@ -132,12 +132,9 @@ export class StudentsService {
     return throwError(error);
   }
 
-  handleBulkUpload({ schoolId, students }: { schoolId: number; students }) {
+  handleBulkUpload(payload: FormData) {
     return this.http
-      .post(`${BASE_URL}/api/v1/student/bulk-upload`, {
-        schoolId,
-        students,
-      })
+      .post(`${BASE_URL}/api/v1/student/bulk-upload`, payload)
       .pipe(catchError(this.handleHttpError));
   }
   getStudentGenderReport(): Observable<IStudentGenderReport[]> {
