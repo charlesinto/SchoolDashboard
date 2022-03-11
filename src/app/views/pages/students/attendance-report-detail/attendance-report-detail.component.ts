@@ -38,6 +38,7 @@ export class AttendanceReportDetailComponent implements OnInit {
     'female',
     'attendanceDate',
     'status',
+    'time',
   ];
   @Input() data: { labels: string[]; datasets: any[] };
   @Input() type: string = 'doughnut';
@@ -85,6 +86,7 @@ export class AttendanceReportDetailComponent implements OnInit {
           ? params['dateRange'].split('to')[1].trim()
           : '',
         attendanceDate: params['attendanceDate'],
+        time: params['time'],
       };
       this.school = attendanceQueryParams.schools[0];
       this.state = attendanceQueryParams.state[0];
@@ -216,6 +218,7 @@ export class AttendanceReportDetailComponent implements OnInit {
         };
         this.initChart();
         this.dataSource.data = data;
+
         this.changeDetectRef.detectChanges();
       },
       (error) => {
@@ -337,10 +340,12 @@ export interface IStudentAttendanceDetail {
   attendanceDate: string;
   status: string;
   action?: string;
+  time?: string;
 }
 
 export interface IQueryAttendanceDetail extends IQueryAttendanceParams {
   attendanceDate: string;
+  time?: string;
 }
 
 export interface IStudentAttendaceQuickView {
@@ -350,4 +355,5 @@ export interface IStudentAttendaceQuickView {
   studentclass: string;
   gender: string;
   status: string;
+  time?: string;
 }

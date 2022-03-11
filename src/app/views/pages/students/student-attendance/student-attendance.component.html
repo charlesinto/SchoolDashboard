@@ -248,7 +248,20 @@
               Attendance Date
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
-              {{ element.date }}
+              <a
+                (click)="onRowElementClick($event, element)"
+                style="text-decoration: underline; cursor: pointer"
+              >
+                {{ element.date }}
+              </a>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="time">
+            <mat-header-cell *matHeaderCellDef>
+              Attendance Time
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.datecreated }}
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="count">
@@ -276,7 +289,7 @@
                 mat-icon-button
                 color="primary"
                 aria-label="Example icon button with a home icon"
-                (click)="onRowElementClick($event, element)"
+                (click)="onTimeClick($event, element)"
               >
                 <mat-icon>remove_red_eye</mat-icon>
               </button>

@@ -63,7 +63,7 @@ export class StudentAttendanceComponent implements OnInit {
     'Primary Six',
   ];
   ELEMENT_DATA: IAttendanceSummary[] = [];
-  displayedColumns = ['date', 'count', 'actions'];
+  displayedColumns = ['date', 'count', 'actions', 'time'];
   dataSource = new MatTableDataSource<IAttendanceSummary>(this.ELEMENT_DATA);
   selection = new SelectionModel<IAttendanceSummary>(true, []);
   loading: Boolean = false;
@@ -435,6 +435,19 @@ export class StudentAttendanceComponent implements OnInit {
       },
     });
   }
+  onTimeClick(event: any, element: IAttendanceSummary) {
+    this.router.navigate(['students', 'view-attendance-report'], {
+      queryParams: {
+        class: this.queryParams.class.join('**'),
+        schools: this.queryParams.schools.join('**'),
+        states: this.queryParams.state.join('**'),
+        lga: this.queryParams.lga.join('**'),
+        dateRange: `${this.queryParams.startDate} to ${this.queryParams.endDate}`,
+        attendanceDate: element.date,
+        time: element.datecreated,
+      },
+    });
+  }
 }
 
 export interface IStudentAttendanceReport {
@@ -457,4 +470,6 @@ export interface IQueryAttendanceParams {
 export interface IAttendanceSummary {
   date: string;
   count: string;
+  datecreated?: string;
+  time?: string;
 }

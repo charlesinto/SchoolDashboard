@@ -1447,13 +1447,9 @@ var StudentsService = /** @class */ (function () {
         // or just return nothing:
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error);
     };
-    StudentsService.prototype.handleBulkUpload = function (_a) {
-        var schoolId = _a.schoolId, students = _a.students;
+    StudentsService.prototype.handleBulkUpload = function (payload) {
         return this.http
-            .post(BASE_URL + "/api/v1/student/bulk-upload", {
-            schoolId: schoolId,
-            students: students,
-        })
+            .post(BASE_URL + "/api/v1/student/bulk-upload", payload)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleHttpError));
     };
     StudentsService.prototype.getStudentGenderReport = function () {
@@ -1479,7 +1475,11 @@ var StudentsService = /** @class */ (function () {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (response) {
             var data = [];
             response['data'].forEach(function (item) {
-                return data.push({ date: item['date'], count: item['count'] });
+                return data.push({
+                    date: item['date'],
+                    count: item['count'],
+                    datecreated: item['datecreated'],
+                });
             });
             return data;
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleHttpError));
@@ -1499,6 +1499,7 @@ var StudentsService = /** @class */ (function () {
                     status: item.status,
                     class: item.studentclass,
                     attendanceDate: params.attendanceDate,
+                    time: item.time,
                 });
             });
             return data;
@@ -1645,7 +1646,7 @@ var UploadStudentComponent = /** @class */ (function () {
     };
     UploadStudentComponent.prototype.uploadStudents = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
-            var jsonData, index, school, error_1;
+            var jsonData, index, school, formData, error_1;
             var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
@@ -1668,9 +1669,12 @@ var UploadStudentComponent = /** @class */ (function () {
                         });
                         if (index !== -1) {
                             school = this.schoolDataBase[index];
+                            formData = new FormData();
+                            formData.append('schoolId', "" + school.id);
+                            formData.append('students', this.data.file);
                             this.loading = true;
                             this.studentService
-                                .handleBulkUpload({ schoolId: school.id, students: jsonData })
+                                .handleBulkUpload(formData)
                                 .subscribe(function (data) {
                                 _this.loading = false;
                                 console.log(data);
@@ -1680,12 +1684,14 @@ var UploadStudentComponent = /** @class */ (function () {
                             }, function (error) {
                                 _this.loading = false;
                                 console.log(error);
+                                _this.appService.showPopAlertError('Operation failed', error.error.message || 'Some errors were encountered');
                             });
                         }
                         return [3 /*break*/, 3];
                     case 2:
                         error_1 = _a.sent();
                         this.loading = false;
+                        this.appService.showPopAlertError('Operation failed', error_1);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

@@ -4942,6 +4942,7 @@ var SchoolsComponent = /** @class */ (function () {
         this.locations = [];
         this.statesSelected = new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].compose([]));
         this.lgaSelected = new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].compose([]));
+        this.isUploading = false;
         this.states = [];
         this.localgovernments = [];
         this.totalCount = 0;

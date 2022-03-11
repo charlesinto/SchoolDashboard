@@ -26804,7 +26804,7 @@ var locations = [
                 { name: 'Kwami', id: 7 },
                 { name: 'Nafada', id: 8 },
                 { name: 'Shongom', id: 9 },
-                { name: 'Yamaltu/Deba', id: 10 },
+                { name: 'Yamaltu Deba', id: 10 },
             ],
         },
     },

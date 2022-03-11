@@ -55,7 +55,6 @@ export class StudentsService {
       )
       .pipe(
         map((response) => {
-          console.log(response);
           const students: Student[] = [];
           response['data'].forEach((item) => {
             students.push({
@@ -171,7 +170,11 @@ export class StudentsService {
         map((response) => {
           const data: IAttendanceSummary[] = [];
           response['data'].forEach((item) =>
-            data.push({ date: item['date'], count: item['count'] })
+            data.push({
+              date: item['date'],
+              count: item['count'],
+              datecreated: item['datecreated'],
+            })
           );
           return data;
         }),
@@ -200,6 +203,7 @@ export class StudentsService {
               status: item.status,
               class: item.studentclass,
               attendanceDate: params.attendanceDate,
+              time: item.time,
             });
           });
           return data;
